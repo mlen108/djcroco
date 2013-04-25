@@ -35,10 +35,10 @@ Define the model you wish to extend: ::
     from djcroco.models import CrocoModel
 
 
-    class TestMedia(CrocoModel):
+    class Example(CrocoModel):
         name = models.CharField(max_length=255)
-        file = models.FileField(upload_to='medias/')
-        thumbnail = models.ImageField(upload_to='medias/thumbnails/', blank=True,
+        file = models.FileField(upload_to='examples/')
+        thumbnail = models.ImageField(upload_to='examples/thumbnails/', blank=True,
             null=True, editable=False)
 
         def __unicode__(self):
