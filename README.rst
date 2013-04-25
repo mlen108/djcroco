@@ -10,12 +10,6 @@ To install ``djcroco``, simply: ::
 
     pip install djcroco
 
-Add to your ``INSTALLED_APPS``: ::
-
-    ...
-    'djcroco',
-    ...
-
 Include urls in your ``urls.py``: ::
 
     url(r'', include('djcroco.urls')),
