@@ -1,2 +1,2 @@
-__author__ = 'Incuna Ltd'
+__author__ = 'Matt Lenc'
 __version__ = '0.1'

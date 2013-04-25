@@ -52,8 +52,6 @@ class CrocoView(BaseDetailView):
         # TODO:
         croco_url = 'https://crocodoc.com/view/{0}'
 
-        # TODO: allow to view non-crocodoc items
-
         resp = {
             'content': croco_url.format(session),
         }
