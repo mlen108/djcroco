@@ -11,12 +11,12 @@ from django.template.defaultfilters import filesizeformat
 import crocodoc
 from crocodoc import CrocodocError
 
-CROCO_MODEL = getattr(settings, 'CROCO_MODEL', None)
+CROCO_MODEL = getattr(settings, 'CROCO_MODEL', os.environ.get('CROCO_MODEL'))
 if CROCO_MODEL is None:
     raise ImproperlyConfigured("CROCO_MODEL setting is required."
         " Define it in your project's settings.py")
 
-CROCO_API_TOKEN = getattr(settings, 'CROCO_API_TOKEN', None)
+CROCO_API_TOKEN = getattr(settings, 'CROCO_API_TOKEN', os.environ.get('CROCO_API_TOKEN'))
 if CROCO_API_TOKEN is None:
     raise ImproperlyConfigured("CROCO_API_TOKEN setting is required."
         " Define it in your project's settings.py")
