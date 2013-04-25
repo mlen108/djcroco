@@ -55,28 +55,26 @@ class CrocoModel(models.Model):
         self.__original_filename = self.file.name
 
     def save(self, *args, **kwargs):
-        # computing size of file everywhere else is expensive
+        # computing the file size everywhere else is expensive
         self.file_size = self.file.size
-        # need to save before we save the file.
+        # need to save before we save the file
         super(CrocoModel, self).save(*args, **kwargs)
 
         # do not upload image as it won't work with Crocodoc
-        if self.is_image():
-            return
-
         if not self.is_document():
             return
 
         # file has changed, update it and reset its thumbnail
         if self.file.name != self.__original_filename:
+            self.thumbnail = None
+            self.crocodoc_uuid = None
             try:
                 uuid = crocodoc.document.upload(file=self.file)
+                self.crocodoc_uuid = uuid
             except CrocodocError as e:
                 raise AttributeError(e.error_message)
 
-            self.crocodoc_uuid = uuid
-            self.thumbnail = None
-            super(CrocoModel, self).save(*args, **kwargs)
+        super(CrocoModel, self).save(*args, **kwargs)
 
     def get_absolute_view_url(self):
         return reverse('croco_view', kwargs={'pk': self.pk})
@@ -86,11 +84,7 @@ class CrocoModel(models.Model):
 
     def get_thumbnail(self):
         # do not ask for thumbnail again if we have one already
-        if self.thumbnail:
-            return self.thumbnail.url
-
-        # TODO: generate thumbnail for images, till Crocodoc does it
-        if self.is_image():
+        if self.thumbnail or self.is_image():
             return self.thumbnail
 
         # this is nasty code, so make it better soon
@@ -108,8 +102,6 @@ class CrocoModel(models.Model):
         except CrocodocError as e:
             raise AttributeError(e.error_message)
 
-        if hasattr(self.thumbnail, 'url'):
-            return self.thumbnail.url
         return self.thumbnail
 
     def _save_thumbnail(self, thumbnail):
