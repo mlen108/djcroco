@@ -28,6 +28,8 @@ class CrocoModel(models.Model):
     crocodoc_uuid = models.CharField(max_length=255, editable=False)
     file_size = models.IntegerField(default=0, editable=False)
 
+    __original_filename = None  # cached for smart generating thumbnails
+
     class Meta:
         abstract = True
 
@@ -50,9 +52,9 @@ class CrocoModel(models.Model):
             if not isinstance(self.thumbnail, models.ImageField):
                 raise AttributeError(wrong_field.format('thumbnail', 'ImageField'))
 
+        self.__original_filename = self.file.name
+
     def save(self, *args, **kwargs):
-        # reset thumbnail when re-saving object
-        self.thumbnail = None
         # computing size of file everywhere else is expensive
         self.file_size = self.file.size
         # need to save before we save the file.
@@ -65,13 +67,15 @@ class CrocoModel(models.Model):
         if not self.is_document():
             return
 
-        if self.file and not self.thumbnail:
+        # file has changed, update it and reset its thumbnail
+        if self.file.name != self.__original_filename:
             try:
                 uuid = crocodoc.document.upload(file=self.file)
             except CrocodocError as e:
                 raise AttributeError(e.error_message)
 
             self.crocodoc_uuid = uuid
+            self.thumbnail = None
             super(CrocoModel, self).save(*args, **kwargs)
 
     def get_absolute_view_url(self):
@@ -92,7 +96,6 @@ class CrocoModel(models.Model):
         # this is nasty code, so make it better soon
         try:
             status = crocodoc.document.status(self.crocodoc_uuid)
-            print status
             if status.get('error') is None:
                 try:
                     # TODO: custom thumbnail sizes
