@@ -6,18 +6,25 @@ djcroco extends your `Django <https://www.djangoproject.com/>`_ model to add sup
 Installation
 ------------
 
-To install ``djcroco``, simply: ::
+To install ``djcroco``, simply run: ::
 
     pip install djcroco
 
-Include urls in your ``urls.py``: ::
+Then include in ``urls.py``: ::
 
     url(r'', include('djcroco.urls')),
 
-Define Crocodoc API token and the model you want to extend, in your ``settings.py``: ::
+And define Crocodoc API token and the model you want to extend.
+
+In ``settings.py``: ::
 
     CROCO_MODEL = 'app_name.model_name'
     CROCO_API_TOKEN = '<api_token>'
+
+Or in ``env.sh``: ::
+
+    export $CROCO_MODEL='app_name.model_name'
+    export $CROCO_API_TOKEN='<api_token>'
 
 Usage
 -----
@@ -38,15 +45,15 @@ Define the model you wish to extend: ::
         def __unicode__(self):
             return self.name
 
-**Note the below:**
+**Note:**
 
-* ``CrocoModel`` is an abstract model. More info about `abstract models <https://docs.djangoproject.com/en/dev/topics/db/models/#abstract-base-classes>`_.
+* ``CrocoModel`` is an `abstract model <https://docs.djangoproject.com/en/dev/topics/db/models/#abstract-base-classes>`_.
 
 * Your model must contain the above fields of ``file`` and ``thumbnail``, and exactly the same field instances as in the example.
 
 **How it works:**
 
-* Every time you save your model, the ``djcroco`` uploads document to Crocodoc to start conversion process. Only supported documents are uploaded. `List of supported documents <http://support.crocodoc.com/customer/portal/articles/515434-what-file-formats-are-supported->`_.
+* Every time you save your model, the ``djcroco`` uploads document to Crocodoc to start conversion process. Only `supported documents <http://support.crocodoc.com/customer/portal/articles/515434-what-file-formats-are-supported->`_ are uploaded.
 
 * When the template renders, the ``get_thumbnail`` method creates a thumbnail to display in your app.
 
