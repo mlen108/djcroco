@@ -1,6 +1,12 @@
 Changelog for djcroco
 =====================
 
+0.1.3
+=====
+
+* Fix issue when `url` of thumbnail was not returned properly.
+* Allow to use custom width/height of the thumbnail.
+
 0.1.2
 =====
 

@@ -21,6 +21,14 @@ if CROCO_API_TOKEN is None:
     raise ImproperlyConfigured("CROCO_API_TOKEN setting is required."
         " Define it in your project's settings.py")
 
+CROCO_THUMBNAIL_WIDTH = getattr(settings, 'CROCO_THUMBNAIL_WIDTH', os.environ.get('CROCO_THUMBNAIL_WIDTH'))
+if CROCO_THUMBNAIL_WIDTH is None:
+    CROCO_THUMBNAIL_WIDTH = 100
+
+CROCO_THUMBNAIL_HEIGHT = getattr(settings, 'CROCO_THUMBNAIL_HEIGHT', os.environ.get('CROCO_THUMBNAIL_HEIGHT'))
+if CROCO_THUMBNAIL_HEIGHT is None:
+    CROCO_THUMBNAIL_HEIGHT = 100
+
 crocodoc.api_token = CROCO_API_TOKEN
 
 
@@ -85,6 +93,8 @@ class CrocoModel(models.Model):
     def get_thumbnail(self):
         # do not ask for thumbnail again if we have one already
         if self.thumbnail or self.is_image():
+            if hasattr(self.thumbnail, 'url'):
+                return self.thumbnail.url
             return self.thumbnail
 
         # this is nasty code, so make it better soon
@@ -92,8 +102,8 @@ class CrocoModel(models.Model):
             status = crocodoc.document.status(self.crocodoc_uuid)
             if status.get('error') is None:
                 try:
-                    # TODO: custom thumbnail sizes
-                    thumbnail = crocodoc.download.thumbnail(self.crocodoc_uuid)
+                    thumbnail = crocodoc.download.thumbnail(self.crocodoc_uuid,
+                        CROCO_THUMBNAIL_WIDTH, CROCO_THUMBNAIL_HEIGHT)
                     self._save_thumbnail(thumbnail)
                 except CrocodocError as e:
                     raise AttributeError(e.error_message)
@@ -102,6 +112,8 @@ class CrocoModel(models.Model):
         except CrocodocError as e:
             raise AttributeError(e.error_message)
 
+        if hasattr(self.thumbnail, 'url'):
+            return self.thumbnail.url
         return self.thumbnail
 
     def _save_thumbnail(self, thumbnail):
