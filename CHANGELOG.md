@@ -1,6 +1,11 @@
 Changelog for djcroco
 =====================
 
+0.2.2
+=====
+
+* Property `view_file` changed to more appropriate `url`.
+
 0.2.1
 =====
 

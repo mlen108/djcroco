@@ -79,7 +79,7 @@ Returns UUID of the file (each document has unique id).
 
 Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.org/wiki/Data_URI_scheme>`_ for more details).
 
-    {{ obj.document.view_file }}
+    {{ obj.document.url }}
 
 Returns url of the file so document can be viewed directly.
 

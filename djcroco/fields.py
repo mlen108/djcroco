@@ -63,7 +63,7 @@ class CrocoFieldObject(object):
         return self.instance._get_thumbnail(self.attrs['uuid'])
 
     @property
-    def view_file(self):
+    def url(self):
         return self.instance._view_file(self.attrs['uuid'])
 
     def __unicode__(self):
