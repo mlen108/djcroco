@@ -11,13 +11,11 @@ To install ``djcroco``, simply run: ::
     pip install djcroco
 
 
-Define Crocodoc API token.
-
-In ``settings.py``: ::
+Define Crocodoc API token in ``settings.py``: ::
 
     CROCO_API_TOKEN = '<api_token>'
 
-Or alternatively in ``env.sh``: ::
+Or alternatively as env variable: ::
 
     export CROCO_API_TOKEN='<api_token>'
 
@@ -42,11 +40,11 @@ Define the field in model you wish to extend: ::
 Custom thumbnails size
 ----------------------
 
-You can pass `thumbnail_size` like so: ::
+You can pass ``thumbnail_size`` like so: ::
 
-    document = CrocoField(thumbnail_size=(150,150))
+    document = CrocoField(thumbnail_size=(150, 150))
 
-Where tuple is represented as `(width,height)`.
+Where tuple is represented as ``(width, height)``.
 
 If you do not pass custom thumbnail size, the default will be used (100x100).
 The maximum dimensions for thumbnail is 300x300. See
@@ -73,7 +71,7 @@ Returns type (extension) of the file.
 
     {{ obj.document.uuid }}
 
-Returns UUID of the file (each document has unique id).
+Returns UUID of the file (each Crocodoc document has unique id).
 
     {{ obj.document.thumbnail }}
 
@@ -81,7 +79,7 @@ Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.or
 
     {{ obj.document.url }}
 
-Returns url of the file so document can be viewed directly.
+Returns url of the file (so document can be viewed directly).
 
 Dependencies
 ------------
