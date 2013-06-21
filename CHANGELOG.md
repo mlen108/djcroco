@@ -1,6 +1,11 @@
 Changelog for djcroco
 =====================
 
+0.2.1
+=====
+
+* Fix import of South introspection module.
+
 0.2.0
 =====
 
