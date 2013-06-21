@@ -1,6 +1,11 @@
 Changelog for djcroco
 =====================
 
+0.2.0
+=====
+
+* djcroco is a model field now (and its API is backward incompatible).
+
 0.1.3
 =====
 
