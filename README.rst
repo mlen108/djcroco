@@ -1,7 +1,7 @@
 djcroco
 =======
 
-djcroco extends your `Django <https://www.djangoproject.com/>`_ model to add support for the `Crocodoc API <https://crocodoc.com/>`_.
+djcroco adds custom field in your `Django <https://www.djangoproject.com/>`_ models to add support for the `Crocodoc API <https://crocodoc.com/>`_.
 
 Installation
 ------------
@@ -10,76 +10,78 @@ To install ``djcroco``, simply run: ::
 
     pip install djcroco
 
-Then include in ``urls.py``: ::
 
-    url(r'', include('djcroco.urls')),
-
-And define Crocodoc API token and the model you want to extend.
+Define Crocodoc API token.
 
 In ``settings.py``: ::
 
-    CROCO_MODEL = 'app_name.model_name'
     CROCO_API_TOKEN = '<api_token>'
 
-Or in ``env.sh``: ::
+Or alternatively in ``env.sh``: ::
 
-    export $CROCO_MODEL='app_name.model_name'
-    export $CROCO_API_TOKEN='<api_token>'
+    export CROCO_API_TOKEN='<api_token>'
 
 Usage
 -----
 
-Define the model you wish to extend: ::
+Define the field in model you wish to extend: ::
 
     from django.db import models
 
-    from djcroco.models import CrocoModel
+    from djcroco.fields import CrocoField
 
 
-    class Example(CrocoModel):
+    class Example(models.Model):
         name = models.CharField(max_length=255)
-        file = models.FileField(upload_to='examples/')
-        thumbnail = models.ImageField(upload_to='examples/thumbnails/', blank=True,
-            null=True, editable=False)
+        document = CrocoField()
 
         def __unicode__(self):
             return self.name
 
-**Note:**
 
-* ``CrocoModel`` is an `abstract model <https://docs.djangoproject.com/en/dev/topics/db/models/#abstract-base-classes>`_.
+Custom thumbnails size
+----------------------
 
-* Your model must contain the above fields of ``file`` and ``thumbnail``, and exactly the same field instances as in the example.
+You can pass `thumbnail_size` like so: ::
 
-**How it works:**
+    document = CrocoField(thumbnail_size=(150,150))
 
-* Every time you save your model, the ``djcroco`` uploads document to Crocodoc to start conversion process. Only `supported documents <http://support.crocodoc.com/customer/portal/articles/515434-what-file-formats-are-supported->`_ are uploaded.
+Where tuple is represented as `(width,height)`.
 
-* When the template renders, the ``get_thumbnail`` method creates a thumbnail to display in your app.
+If you do not pass custom thumbnail size, the default will be used (100x100).
+The maximum dimensions for thumbnail is 300x300. See
+`docs <https://crocodoc.com/docs/api/#dl-thumb>`_ for more details.
 
-* The ``get_absolute_view_url`` creates a viewing session on Crocodoc so you can embed the document in your app. It returns only an URL so it is up to you how you use it.
+Render the awesomeness
+----------------------
 
+    {{ obj.document.name }}
 
-Render the awesomeness in your template: ::
+Returns name of the file.
 
-    <ul>
-    {% for obj in object_list %}
-        <li>Name: {{ obj.name }}</li>
-        <li>Size: {{ obj.human_file_size }}</li>
-        <li>Extension: {{ obj.file_ext }}</li>
-        <li><img src="{{ obj.get_thumbnail }}"></li>
+    {{ obj.document.size }}
 
-        {% if obj.is_viewable %}
-        <li><a href="{{ obj.get_absolute_view_url }}">View</a></li>
-        {% endif %}
+Returns size of the file (in bytes).
 
-        {% if obj.is_downloadable %}
-        <li><a href="{{ obj.get_absolute_download_url }}">Download</a></li>
-        {% endif %}
-    {% endfor %} 
-    </ul>
+    {{ obj.document.size_human }}
 
+Returns human-readable size of the file.
 
+    {{ obj.document.type }}
+
+Returns type (extension) of the file.
+
+    {{ obj.document.uuid }}
+
+Returns UUID of the file (each document has unique id).
+
+    {{ obj.document.thumbnail }}
+
+Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.org/wiki/Data_URI_scheme>`_ for more details).
+
+    {{ obj.document.view_file }}
+
+Returns url of the file so document can be viewed directly.
 
 Dependencies
 ------------
