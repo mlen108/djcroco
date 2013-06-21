@@ -125,3 +125,10 @@ class CrocoField(models.Field):
         if ext[1:] in ('pdf', 'ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx', 'csv'):
             return True
         return False
+
+
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([], ["^djcroco\.fields\.CrocoField"])
+except ImportError:
+    pass
