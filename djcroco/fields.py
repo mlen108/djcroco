@@ -44,33 +44,33 @@ class CrocoStorage(Storage):
         return 'delete'
 
 
-class CrocoFieldValue(object):
-    def __init__(self, instance, value):
+class CrocoFieldObject(object):
+    def __init__(self, instance, attrs):
         self.instance = instance
-        self.value = value
+        self.attrs = attrs
 
     def __getattr__(self, name):
-        if name in self.value:
-            return self.value[name]
+        if name in self.attrs:
+            return self.attrs[name]
         return name
 
     @property
     def size_human(self):
-        return filesizeformat(self.value['size'])
+        return filesizeformat(self.attrs['size'])
 
     @property
     def thumbnail(self):
-        return self.instance._get_thumbnail(self.value['uuid'])
+        return self.instance._get_thumbnail(self.attrs['uuid'])
 
     @property
     def view_file(self):
-        return self.instance._view_file(self.value['uuid'])
+        return self.instance._view_file(self.attrs['uuid'])
 
     def __unicode__(self):
-        return "%s" % self.value
+        return "%s" % self.attrs
 
     def __str__(self):
-        return "%s" % self.value
+        return "%s" % self.attrs
 
 
 class CrocoField(models.Field):
@@ -79,7 +79,7 @@ class CrocoField(models.Field):
 
     def __init__(self, verbose_name=None, name=None, *args, **kwargs):
         self.storage = CrocoStorage()
-        self.thumbnail_size = kwargs.pop('thumbnail_size', (100,100))
+        self.thumbnail_size = kwargs.pop('thumbnail_size', (100, 100))
         super(CrocoField, self).__init__(*args, **kwargs)
 
     def get_internal_type(self):
@@ -91,7 +91,7 @@ class CrocoField(models.Field):
 
         try:
             if isinstance(value, six.string_types):
-                return CrocoFieldValue(self, json.loads(value))
+                return CrocoFieldObject(self, json.loads(value))
         except ValueError:
             pass
         return value
