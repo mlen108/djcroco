@@ -6,6 +6,7 @@ from django import forms
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import Storage
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.template.defaultfilters import filesizeformat
 from django.utils import six
@@ -40,9 +41,6 @@ class CrocoStorage(Storage):
 
         return uuid
 
-    def delete(self, name):
-        return 'delete'
-
 
 class CrocoFieldObject(object):
     def __init__(self, instance, attrs):
@@ -64,7 +62,15 @@ class CrocoFieldObject(object):
 
     @property
     def url(self):
-        return self.instance._view_file(self.attrs['uuid'])
+        return reverse('croco_document_view', kwargs={
+            'uuid': self.attrs['uuid']
+        })
+
+    @property
+    def download_document(self):
+        return reverse('croco_document_download', kwargs={
+            'uuid': self.attrs['uuid']
+        })
 
     def __unicode__(self):
         return "%s" % self.attrs
@@ -145,14 +151,6 @@ class CrocoField(models.Field):
                 return e.error_message
         except CrocodocError as e:
             return e.error_message
-
-    def _view_file(self, uuid):
-        try:
-            session = crocodoc.session.create(uuid)
-        except crocodoc.CrocodocError as e:
-            return e.error_message
-
-        return 'https://crocodoc.com/view/' + session
 
     def _file_ext(self, filename):
         """ Return an extension of the file """

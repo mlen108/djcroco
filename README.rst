@@ -10,6 +10,9 @@ To install ``djcroco``, simply run: ::
 
     pip install djcroco
 
+Include in ``urls.py``: ::
+
+    url(r'', include('djcroco.urls')),
 
 Define Crocodoc API token in ``settings.py``: ::
 
@@ -47,8 +50,7 @@ You can pass ``thumbnail_size`` like so: ::
 Where tuple is represented as ``(width, height)``.
 
 If you do not pass custom thumbnail size, the default will be used (100x100).
-The maximum dimensions for thumbnail is 300x300. See
-`docs <https://crocodoc.com/docs/api/#dl-thumb>`_ for more details.
+The maximum dimensions for thumbnail is 300x300.
 
 Render the awesomeness
 ----------------------
@@ -63,7 +65,7 @@ Returns size of the file (in bytes).
 
     {{ obj.document.size_human }}
 
-Returns human-readable size of the file.
+Returns human-readable size of the file (eg. 1.3 MB).
 
     {{ obj.document.type }}
 
@@ -79,7 +81,11 @@ Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.or
 
     {{ obj.document.url }}
 
-Returns url of the file (so document can be viewed directly).
+Returns url of the file so document can be viewed directly.
+
+    {{ obj.document.download_document }}
+
+Downloads the original document in PDF.
 
 Dependencies
 ------------

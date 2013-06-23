@@ -1,6 +1,13 @@
 Changelog for djcroco
 =====================
 
+0.2.3
+=====
+
+* Provide urls to view/download the document. It is a little performance fix
+as it means that it does not need to create new session on Crocodoc every time
+template gets refreshed.
+
 0.2.2
 =====
 
@@ -14,7 +21,7 @@ Changelog for djcroco
 0.2.0
 =====
 
-* djcroco is a model field now (and its API is backward incompatible).
+* djcroco is a model field now (and its old API is backward incompatible).
 
 0.1.3
 =====
