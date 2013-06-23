@@ -79,10 +79,10 @@ class CrocoFieldObject(object):
         })
 
     def __unicode__(self):
-        return "%s" % self.attrs
+        return "%s" % self.attrs['name']
 
     def __str__(self):
-        return "%s" % self.attrs
+        return "%s" % self.attrs['name']
 
 
 class CrocoField(models.Field):
