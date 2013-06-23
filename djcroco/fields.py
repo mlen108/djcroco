@@ -67,6 +67,12 @@ class CrocoFieldObject(object):
         })
 
     @property
+    def redirect_url(self):
+        return reverse('croco_document_redirect', kwargs={
+            'uuid': self.attrs['uuid']
+        })
+
+    @property
     def download_document(self):
         return reverse('croco_document_download', kwargs={
             'uuid': self.attrs['uuid']

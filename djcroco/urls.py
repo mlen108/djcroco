@@ -1,12 +1,15 @@
 from django.conf.urls import patterns, url
 
-from .views import CrocoDocumentView, CrocoDocumentDownload
+import views
 
 urlpatterns = patterns('',
     url(r'^croco_document_view/(?P<uuid>[-\w]+)$',
-        CrocoDocumentView.as_view(),
+        views.CrocoDocumentView.as_view(),
         name='croco_document_view'),
+    url(r'^croco_document_redirect/(?P<uuid>[-\w]+)$',
+        views.CrocoDocumentView.as_view(redirect=True),
+        name='croco_document_redirect'),
     url(r'^croco_document_download/(?P<uuid>[-\w]+)$',
-        CrocoDocumentDownload.as_view(),
+        views.CrocoDocumentDownload.as_view(),
         name='croco_document_download'),
 )

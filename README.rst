@@ -83,6 +83,10 @@ Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.or
 
 Returns url of the file so document can be viewed directly.
 
+    {{ obj.document.redirect_url }}
+
+Redirects to the /above/ ``url``.
+
     {{ obj.document.download_document }}
 
 Downloads the original document in PDF.
