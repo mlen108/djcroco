@@ -1,7 +1,8 @@
 djcroco
 =======
 
-djcroco adds custom field in your `Django <https://www.djangoproject.com/>`_ models to add support for the `Crocodoc API <https://crocodoc.com/>`_.
+djcroco is a custom `Django <https://www.djangoproject.com/>`_ model field to
+add support for the `Crocodoc API <https://crocodoc.com/>`_.
 
 Installation
 ------------
@@ -98,7 +99,8 @@ Returns a thumbnail of the document's first page in PNG format.
     {{ obj.document.download_text }}
 
 Returns the full text from a document.
-Note: This method is available only if your Crocodoc account has text extraction enabled.
+Note: This method is available only if your Crocodoc account has text
+extraction enabled.
 
 Dependencies
 ------------
