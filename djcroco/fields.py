@@ -18,7 +18,7 @@ from crocodoc import CrocodocError
 _token = 'CROCO_API_TOKEN'
 CROCO_API_TOKEN = getattr(settings, _token, os.environ.get(_token))
 if CROCO_API_TOKEN is None:
-    raise ImproperlyConfigured("CROCO_API_TOKEN setting is required."
+    raise ImproperlyConfigured("CROCO_API_TOKEN settings is required."
         " Define it in your project's settings.py or env.sh file.")
 
 crocodoc.api_token = CROCO_API_TOKEN

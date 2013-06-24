@@ -7,10 +7,11 @@ DATABASES = {
     }
 }
 
-MEDIA_URL = ''
-STATIC_URL = ''
+SECRET_KEY = 'lolz'
 
 INSTALLED_APPS = (
     'djcroco.tests',
     'djcroco',
 )
+
+ROOT_URLCONF = 'djcroco.tests.urls'

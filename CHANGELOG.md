@@ -1,13 +1,14 @@
 Changelog for djcroco
 =====================
 
-0.2.4
+0.2.3
 =====
 
-* Add support for downloading the thumbnail and text of the document.
+* Add tests.
+* Add support for downloading the thumbnail and text of document.
 * Bug fixes.
 
-0.2.3
+0.2.2
 =====
 
 * Fix issue when file has not changed while saving model.
@@ -16,10 +17,6 @@ Changelog for djcroco
 * Provide urls to view/download the document. It is a little performance fix
 as it means that it does not need to create new session on Crocodoc every time
 template gets refreshed/rendered.
-
-0.2.2
-=====
-
 * Property `view_file` changed to more appropriate `url`.
 
 0.2.1
