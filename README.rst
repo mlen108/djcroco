@@ -1,6 +1,12 @@
 djcroco
 =======
 
+.. image:: https://pypip.in/v/pygmy/badge.png
+   :target: https://pypi.python.org/pypi/pygmy
+
+.. image:: https://travis-ci.org/mattack108/pygmy.png
+   :target: https://travis-ci.org/mattack108/pygmy
+
 djcroco is a custom `Django <https://www.djangoproject.com/>`_ model field to
 add support for the `Crocodoc API <https://crocodoc.com/>`_.
 
