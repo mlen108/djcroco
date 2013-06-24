@@ -89,7 +89,16 @@ Returns url of the file wrapped in `HttpResponse <https://docs.djangoproject.com
 
     {{ obj.document.download_document }}
 
-Downloads the original document in PDF.
+Returns the original document in PDF format.
+
+    {{ obj.document.download_thumbnail }}
+
+Returns a thumbnail of the document's first page in PNG format.
+
+    {{ obj.document.download_text }}
+
+Returns the full text from a document.
+Note: This method is available only if your Crocodoc account has text extraction enabled.
 
 Dependencies
 ------------

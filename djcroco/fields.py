@@ -78,6 +78,18 @@ class CrocoFieldObject(object):
             'uuid': self.attrs['uuid']
         })
 
+    @property
+    def download_thumbnail(self):
+        return reverse('croco_thumbnail_download', kwargs={
+            'uuid': self.attrs['uuid']
+        })
+
+    @property
+    def download_text(self):
+        return reverse('croco_text_download', kwargs={
+            'uuid': self.attrs['uuid']
+        })
+
     def __unicode__(self):
         return "%s" % self.attrs['name']
 
@@ -105,7 +117,7 @@ class CrocoField(models.Field):
             if isinstance(value, six.string_types):
                 return CrocoFieldObject(self, json.loads(value))
         except ValueError:
-            pass
+            raise
         return value
 
     def pre_save(self, model_instance, add):
@@ -145,16 +157,16 @@ class CrocoField(models.Field):
             status = crocodoc.document.status(uuid)
             if status.get('error') is None:
                 try:
-                    thumb_attrs = {
+                    attrs = {
                         'width': self.thumbnail_size[0],
                         'height': self.thumbnail_size[1],
                     }
-                    thumbnail = crocodoc.download.thumbnail(uuid, **thumb_attrs)
-                    return "data:image/png;base64," + base64.b64encode(thumbnail)
+                    thumb = crocodoc.download.thumbnail(uuid, **attrs)
+                    return "data:image/png;base64," + base64.b64encode(thumb)
                 except CrocodocError as e:
                     return e.error_message
             else:
-                return e.error_message
+                return status.get('error')
         except CrocodocError as e:
             return e.error_message
 
@@ -163,9 +175,10 @@ class CrocoField(models.Field):
         return os.path.splitext(filename)[1][1:]
 
     def _is_document(self, filename):
-        """ """
+        allowed_exts = ('pdf', 'ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx',
+            'csv')
         _root, ext = os.path.splitext(filename.lower())
-        if ext[1:] in ('pdf', 'ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx', 'csv'):
+        if ext[1:] in allowed_exts:
             return True
         return False
 

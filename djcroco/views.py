@@ -15,7 +15,8 @@ class CrocoDocumentView(View):
         try:
             session = crocodoc.session.create(uuid)
         except crocodoc.CrocodocError as e:
-            return HttpResponse(status=e.status_code)
+            return HttpResponse(content=e.response_content,
+                status=e.status_code)
 
         url = 'https://crocodoc.com/view/{0}'.format(session)
 
@@ -37,9 +38,43 @@ class CrocoDocumentDownload(View):
         try:
             file = crocodoc.download.document(uuid, True)
         except crocodoc.CrocodocError as e:
-            return HttpResponse(status=e.status_code)
+            return HttpResponse(content=e.response_content,
+                status=e.status_code)
 
         response = HttpResponse(mimetype='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=%s.pdf' % uuid
         response.write(file)
         return response
+
+
+class CrocoThumbnailDownload(View):
+    def get(self, request, *args, **kwargs):
+        uuid = kwargs.pop('uuid', None)
+        if uuid is None:
+            raise Http404
+
+        try:
+            image = crocodoc.download.thumbnail(uuid)
+        except crocodoc.CrocodocError as e:
+            return HttpResponse(content=e.response_content,
+                status=e.status_code)
+
+        response = HttpResponse(mimetype='image/png')
+        response['Content-Disposition'] = 'attachment; filename=%s.png' % uuid
+        response.write(image)
+        return response
+
+
+class CrocoTextDownload(View):
+    def get(self, request, *args, **kwargs):
+        uuid = kwargs.pop('uuid', None)
+        if uuid is None:
+            raise Http404
+
+        try:
+            text = crocodoc.download.text(uuid)
+        except crocodoc.CrocodocError as e:
+            return HttpResponse(content=e.response_content,
+                status=e.status_code)
+
+        return HttpResponse(content=text)

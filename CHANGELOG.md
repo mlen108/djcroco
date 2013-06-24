@@ -1,6 +1,12 @@
 Changelog for djcroco
 =====================
 
+0.2.4
+=====
+
+* Add support for downloading the thumbnail and text of the document.
+* Bug fixes.
+
 0.2.3
 =====
 
