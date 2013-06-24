@@ -1,19 +1,15 @@
 Changelog for djcroco
 =====================
 
-0.2.3
+0.2.2
 =====
 
-* Fix issue when file has not changed while saving model.
+* Fix issue with saving the model's item when file has not changed.
 * Return doc name as a string repr of class.
 * Add `content_url` property.
 * Provide urls to view/download the document. It is a little performance fix
 as it means that it does not need to create new session on Crocodoc every time
 template gets refreshed/rendered.
-
-0.2.2
-=====
-
 * Property `view_file` changed to more appropriate `url`.
 
 0.2.1
