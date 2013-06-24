@@ -109,22 +109,22 @@ class CrocoField(models.Field):
         return value
 
     def pre_save(self, model_instance, add):
-        file = super(CrocoField, self).pre_save(model_instance, add)
-        croco_uuid = self.storage._save(file)
-        self._croco_uuid = croco_uuid
-        return file
+        value = super(CrocoField, self).pre_save(model_instance, add)
+        if not isinstance(value, CrocoFieldObject):
+            croco_uuid = self.storage._save(value)
+            file_attrs = {
+                'name': value.name,
+                'size': value.size,
+                'uuid': croco_uuid,
+                'type': self._file_ext(value.name),
+            }
+            value = CrocoFieldObject(self, file_attrs)
+        return self.get_prep_value(value)
 
-    def get_db_prep_value(self, value, connection, prepared=False):
-        if value is None:
-            return None
-
-        file_attrs = {
-            'name': value.name,
-            'size': value.size,
-            'uuid': self._croco_uuid,
-            'type': self._file_ext(value.name),
-        }
-        return json.dumps(file_attrs)
+    def get_prep_value(self, value):
+        if isinstance(value, CrocoFieldObject):
+            return json.dumps(value.attrs)
+        return value
 
     def clean(self, instance, filename):
         if not self._is_document(instance.name):
