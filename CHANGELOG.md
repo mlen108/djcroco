@@ -5,7 +5,7 @@ Changelog for djcroco
 =====
 
 * Return doc name as a string repr of class.
-* Add `redirect_url` so it can redirect directly to the document.
+* Add `content_url` property.
 * Provide urls to view/download the document. It is a little performance fix
 as it means that it does not need to create new session on Crocodoc every time
 template gets refreshed.

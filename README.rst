@@ -83,9 +83,9 @@ Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.or
 
 Returns url of the file so document can be viewed directly.
 
-    {{ obj.document.redirect_url }}
+    {{ obj.document.content_url }}
 
-Redirects to the /above/ ``url``.
+Returns url of the file wrapped in `HttpResponse <https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpResponse>`_ object.
 
     {{ obj.document.download_document }}
 
