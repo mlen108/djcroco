@@ -4,11 +4,12 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 
+from .fields import BytesIO
 from .models import Example
 
 
 # simple 1-page pdf saying 'Hello, world!'
-TEST_DOC_DATA = (  # Multiline string, not tuple.
+TEST_DOC_DATA = BytesIO(
     '%PDF-1.7\n\n1 0 obj  % entry point\n<<\n  /Type /Catalog\n  /Pages 2 0 '
     'R\n>>\nendobj\n\n2 0 obj\n<<\n  /Type /Pages\n  /MediaBox [ 0 0 200 200 '
     ']\n  /Count 1\n  /Kids [ 3 0 R ]\n>>\nendobj\n\n3 0 obj\n<<\n  /Type '
@@ -21,7 +22,7 @@ TEST_DOC_DATA = (  # Multiline string, not tuple.
     '\n0000000301 00000 n \n0000000380 00000 n \ntrailer\n<<\n  /Size 6\n  '
     '/Root 1 0 R\n>>\nstartxref\n492\n%%EOF\n'
 )
-TEST_DOC_NAME = u'test_doc_file.pdf'
+TEST_DOC_NAME = 'test_doc_file.pdf'
 
 
 class CrocoTestCase(TestCase):

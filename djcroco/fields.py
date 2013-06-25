@@ -1,6 +1,7 @@
 import base64
 import json
 import os
+import StringIO
 
 from django import forms, get_version
 from django.conf import settings
@@ -12,9 +13,10 @@ from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
 
 if get_version()[:3] == '1.3':
+    BytesIO = StringIO.StringIO
     string_types = str
 else:
-    from django.utils.six import string_types
+    from django.utils.six import string_types, BytesIO
 
 import crocodoc
 from crocodoc import CrocodocError
