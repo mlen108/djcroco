@@ -111,9 +111,8 @@ extraction enabled.
 Dependencies
 ------------
 
-``djcroco`` depends only on `crocodoc-python <https://github.com/crocodoc/crocodoc-python>`_ in order to communicate with Crocodoc API service.
+- Python 2.6.x, 2.7.x
+- Django 1.4.x, 1.5.x
+- `crocodoc <https://pypi.python.org/pypi/crocodoc>`_ 0.1.1
 
-Limitations
------------
-
-``djcroco`` was tested on Django 1.4/Python 2.7.3. Other versions of Django/Python will be supported soon.
+Django 1.3.x and/or Python 3.x will be supported soon!
