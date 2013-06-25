@@ -137,6 +137,7 @@ class CrocoTestCase(unittest.TestCase):
         if response.status_code == 400:
             print response.error_message
             print response.content
+            1/0
         self.assertEqual(len(response.content), 679)
         self.assertEqual(response._headers['content-type'][1],
             'application/pdf')
