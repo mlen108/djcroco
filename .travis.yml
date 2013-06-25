@@ -4,9 +4,8 @@ python:
 env:
   matrix:
   - DJANGO_VERSION=1.4.5
-  - DJANGO_VERSION=1.5.1
   global:
-    secure: ! 'SgJJ5vQeGAyhMqIQoDQW9F9n+c345/scxCCD94bkyDk5d3zro5/imUWUQvXfzatSjhC3N64icL4kg1YXdjk+fHHSOfTj7cSGK+F9T7+qjcCFy74RnC4pv+OUB4BiKQvgu6fOhVX1dbfuB7Ge1C8hML9aW79YQ0vINHKKeTORzuM='
+    secure: "SgJJ5vQeGAyhMqIQoDQW9F9n+c345/scxCCD94bkyDk5d3zro5/imUWUQvXfzatSjhC3N64icL4kg1YXdjk+fHHSOfTj7cSGK+F9T7+qjcCFy74RnC4pv+OUB4BiKQvgu6fOhVX1dbfuB7Ge1C8hML9aW79YQ0vINHKKeTORzuM="
 install:
 - pip install -q Django==$DJANGO_VERSION --use-mirrors
 - pip install . --use-mirrors
