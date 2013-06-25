@@ -5,7 +5,7 @@ env:
   matrix:
   - DJANGO_VERSION=1.4.5
   global:
-    secure: "SgJJ5vQeGAyhMqIQoDQW9F9n+c345/scxCCD94bkyDk5d3zro5/imUWUQvXfzatSjhC3N64icL4kg1YXdjk+fHHSOfTj7cSGK+F9T7+qjcCFy74RnC4pv+OUB4BiKQvgu6fOhVX1dbfuB7Ge1C8hML9aW79YQ0vINHKKeTORzuM="
+    secure: "ohFDQycYOrveVlvEVwHwws2+xPOvFT2TmyoQk/2fILNpl6tiuI/91XdVv8dQ\n5ZsLXc63LP4CFYbCKkC6jCFrlWePB0aITF35bpGJqXk68JptTcsKF9L5LyHX\ntMqLKAgIBeMs/upSXx6LrKrdwmjmPx0rZL71j+mCN1IeNW/0Fpo="
 install:
 - pip install -q Django==$DJANGO_VERSION --use-mirrors
 - pip install . --use-mirrors
