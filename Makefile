@@ -9,4 +9,4 @@ release:
 	python setup.py register sdist upload
 
 test:
-	django-admin.py test tests --settings=djcroco.test_settings
+	django-admin.py test tests --settings=djcroco.test_settings --pythonpath=.

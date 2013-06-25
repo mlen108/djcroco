@@ -1,7 +1,14 @@
 djcroco
 =======
 
-djcroco adds custom field in your `Django <https://www.djangoproject.com/>`_ models to add support for the `Crocodoc API <https://crocodoc.com/>`_.
+.. image:: https://pypip.in/v/djcroco/badge.png
+   :target: https://pypi.python.org/pypi/djcroco
+
+.. image:: https://travis-ci.org/mattack108/djcroco.png
+   :target: https://travis-ci.org/mattack108/djcroco
+
+djcroco is a custom `Django <https://www.djangoproject.com/>`_ model field to
+add support for the `Crocodoc API <https://crocodoc.com/>`_.
 
 Installation
 ------------
@@ -89,7 +96,17 @@ Returns url of the file wrapped in `HttpResponse <https://docs.djangoproject.com
 
     {{ obj.document.download_document }}
 
-Downloads the original document in PDF.
+Returns the original document in PDF format.
+
+    {{ obj.document.download_thumbnail }}
+
+Returns a thumbnail of the document's first page in PNG format.
+
+    {{ obj.document.download_text }}
+
+Returns the full text from a document.
+Note: This method is available only if your Crocodoc account has text
+extraction enabled.
 
 Dependencies
 ------------

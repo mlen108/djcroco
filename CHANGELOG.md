@@ -1,10 +1,18 @@
 Changelog for djcroco
 =====================
 
+0.2.3
+=====
+
+* Add tests.
+* Major Django/Python versions supported.
+* Add support for downloading the thumbnail and text of document.
+* Bug fixes.
+
 0.2.2
 =====
 
-* Fix issue with saving the model's item when file has not changed.
+* Fix issue when file has not changed while saving model.
 * Return doc name as a string repr of class.
 * Add `content_url` property.
 * Provide urls to view/download the document. It is a little performance fix
