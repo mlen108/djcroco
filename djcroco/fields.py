@@ -12,11 +12,9 @@ from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
 
 if get_version()[:3] == '1.3':
-    import StringIO
-    BytesIO = StringIO.StringIO
     string_types = str
 else:
-    from django.utils.six import string_types, BytesIO
+    from django.utils.six import string_types
 
 import crocodoc
 from crocodoc import CrocodocError

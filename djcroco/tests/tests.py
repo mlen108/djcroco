@@ -4,12 +4,11 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 
-from djcroco.fields import BytesIO
 from .models import Example
 
 
 # simple 1-page pdf saying 'Hello, world!'
-TEST_DOC_DATA = BytesIO(
+TEST_DOC_DATA = (  # Multiline string, not tuple.
     '%PDF-1.7\n\n1 0 obj  % entry point\n<<\n  /Type /Catalog\n  /Pages 2 0 '
     'R\n>>\nendobj\n\n2 0 obj\n<<\n  /Type /Pages\n  /MediaBox [ 0 0 200 200 '
     ']\n  /Count 1\n  /Kids [ 3 0 R ]\n>>\nendobj\n\n3 0 obj\n<<\n  /Type '
@@ -67,8 +66,8 @@ class CrocoTestCase(TestCase):
 
         # Ensure correct redirect was made
         response = client.get(url)
-        self.assertEqual(response.status_code, 302)
         self.assertContains(response._headers['location'][1], 'crocodoc.com')
+        self.assertEqual(response.status_code, 302)
 
         # Ensure correct URL for `content_url`
         content_url = example.document.content_url
@@ -78,8 +77,8 @@ class CrocoTestCase(TestCase):
 
         # Ensure correct response
         response = client.get(content_url)
-        self.assertEqual(response.status_code, 200)
         self.assertContains(response.content, 'crocodoc.com')
+        self.assertEqual(response.status_code, 200)
 
         # Ensure correct URL for `download_document`
         document_url = example.document.download_document
@@ -89,8 +88,8 @@ class CrocoTestCase(TestCase):
 
         # Ensure correct response
         response = client.get(document_url)
-        self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.content), 679)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response._headers['content-type'][1],
             'application/pdf')
 
