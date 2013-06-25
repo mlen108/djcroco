@@ -78,8 +78,8 @@ class CrocoTestCase(unittest.TestCase):
 
         # Ensure correct redirect was made
         response = client.get(url)
-        self.assertContains(response._headers['location'][1], 'crocodoc.com')
         self.assertEqual(response.status_code, 302)
+        self.assertContains(response._headers['location'][1], 'crocodoc.com')
 
     def test_document_content_url(self):
         # Ensure correct URL for `content_url`
@@ -90,8 +90,8 @@ class CrocoTestCase(unittest.TestCase):
 
         # Ensure correct response
         response = client.get(content_url)
-        self.assertContains(response.content, 'crocodoc.com')
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response.content, 'crocodoc.com')
 
     def test_document_edit_url(self):
         # Ensure correct URL for `edit_url`
@@ -106,8 +106,8 @@ class CrocoTestCase(unittest.TestCase):
 
         # Ensure correct response
         response = client.get(edit_url)
-        self.assertContains(response.content, 'crocodoc.com')
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response.content, 'crocodoc.com')
 
     def test_document_annotations(self):
         # Ensure correct URL for annotations
@@ -121,8 +121,8 @@ class CrocoTestCase(unittest.TestCase):
 
         # Ensure correct response
         response = client.get(annotations_url)
-        self.assertContains(response.content, 'crocodoc.com')
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response.content, 'crocodoc.com')
 
     def test_document_download(self):
         # Ensure correct URL for `download_document`
@@ -133,8 +133,8 @@ class CrocoTestCase(unittest.TestCase):
 
         # Ensure correct response
         response = client.get(document_url)
-        self.assertEqual(len(response.content), 679)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.content), 679)
         self.assertEqual(response._headers['content-type'][1],
             'application/pdf')
 
