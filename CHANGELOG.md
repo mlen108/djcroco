@@ -1,6 +1,11 @@
 Changelog for djcroco
 =====================
 
+0.2.4
+=====
+
+* Add support for annotations.
+
 0.2.3
 =====
 

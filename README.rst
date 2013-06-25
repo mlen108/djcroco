@@ -64,23 +64,24 @@ Render the awesomeness
 
     {{ obj.document.name }}
 
-Returns name of the file.
+Returns name of the document.
+
 
     {{ obj.document.size }}
 
-Returns size of the file (in bytes).
+Returns size of the document (in bytes).
 
     {{ obj.document.size_human }}
 
-Returns human-readable size of the file (eg. 1.3 MB).
+Returns human-readable size of the document (eg. 1.3 MB).
 
     {{ obj.document.type }}
 
-Returns type (extension) of the file.
+Returns type (extension) of the document.
 
     {{ obj.document.uuid }}
 
-Returns UUID of the file (each Crocodoc document has unique id).
+Returns UUID of the document (each Crocodoc document has unique id).
 
     {{ obj.document.thumbnail }}
 
@@ -88,11 +89,25 @@ Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.or
 
     {{ obj.document.url }}
 
-Returns url of the file so document can be viewed directly.
+Returns url of the document so it can be viewed directly.
 
     {{ obj.document.content_url }}
 
-Returns url of the file wrapped in `HttpResponse <https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpResponse>`_ object.
+Returns url of the document wrapped in `HttpResponse <https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpResponse>`_ object.
+
+    {% url 'croco_document_edit' uuid=obj.document.uuid user_id=request.user.id user_name=request.user.username %}
+
+Returns url of the document to allow user to create annotations.
+`See the docs <https://crocodoc.com/docs/walkthrough/comments/>`_ for more details.
+
+Note: you need to call djcroco's url directly and pass above params.
+
+
+    {% url 'croco_document_annotations' uuid=obj.document.uuid
+    user_id=request.user.id %}
+
+Returns url of the document with annotations/comments made by user with given
+`user_id`.
 
     {{ obj.document.download_document }}
 

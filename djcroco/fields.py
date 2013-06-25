@@ -76,6 +76,19 @@ class CrocoFieldObject(object):
             'uuid': self.attrs['uuid']
         })
 
+    def edit_url(self, user_id, user_name):
+        return reverse('croco_document_edit', kwargs={
+            'uuid': self.attrs['uuid'],
+            'user_id': user_id,
+            'user_name': user_name,
+        })
+
+    def annotations_url(self, user_id):
+        return reverse('croco_document_annotations', kwargs={
+            'uuid': self.attrs['uuid'],
+            'user_id': user_id,
+        })
+
     @property
     def download_document(self):
         return reverse('croco_document_download', kwargs={

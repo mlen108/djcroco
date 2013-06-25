@@ -47,6 +47,50 @@ class CrocoDocumentDownload(View):
         return response
 
 
+class CrocoDocumentEdit(View):
+    def get(self, request, *args, **kwargs):
+        uuid = kwargs.pop('uuid', None)
+        user_id = kwargs.pop('user_id', None)
+        user_name = kwargs.pop('user_name', None)
+        if not (uuid and user_id and user_name):
+            raise Http404
+
+        try:
+            kwargs = {
+                'editable': True,
+                'user': {
+                    'id': user_id,
+                    'name': user_name,
+                }
+            }
+            session = crocodoc.session.create(uuid, **kwargs)
+        except crocodoc.CrocodocError as e:
+            return HttpResponse(content=e.response_content,
+                status=e.status_code)
+
+        url = 'https://crocodoc.com/view/{0}'.format(session)
+
+        return HttpResponse(content=url)
+
+
+class CrocoDocumentAnnotations(View):
+    def get(self, request, *args, **kwargs):
+        uuid = kwargs.pop('uuid', None)
+        user_id = kwargs.pop('user_id', None)
+        if not (uuid and user_id):
+            raise Http404
+
+        try:
+            session = crocodoc.session.create(uuid, filter=user_id)
+        except crocodoc.CrocodocError as e:
+            return HttpResponse(content=e.response_content,
+                status=e.status_code)
+
+        url = 'https://crocodoc.com/view/{0}'.format(session)
+
+        return HttpResponse(content=url)
+
+
 class CrocoThumbnailDownload(View):
     def get(self, request, *args, **kwargs):
         uuid = kwargs.pop('uuid', None)

@@ -80,6 +80,35 @@ class CrocoTestCase(TestCase):
         self.assertContains(response.content, 'crocodoc.com')
         self.assertEqual(response.status_code, 200)
 
+        # Ensure correct URL for `edit_url`
+        edit_url = example.document.edit_url(user_id=1, user_name='matt')
+        kwargs = {
+            'uuid': uuid,
+            'user_id': 1,
+            'user_name': 'matt',
+        }
+        expected_url = reverse('croco_document_edit', kwargs=kwargs)
+        self.assertEqual(edit_url, expected_url)
+
+        # Ensure correct response
+        response = client.get(edit_url)
+        self.assertContains(response.content, 'crocodoc.com')
+        self.assertEqual(response.status_code, 200)
+
+        # Ensure correct URL for annotations
+        annotations_url = example.document.annotations_url(user_id=1)
+        kwargs = {
+            'uuid': uuid,
+            'user_id': 1,
+        }
+        expected_url = reverse('croco_document_annotations', kwargs=kwargs)
+        self.assertEqual(annotations_url, expected_url)
+
+        # Ensure correct response
+        response = client.get(annotations_url)
+        self.assertContains(response.content, 'crocodoc.com')
+        self.assertEqual(response.status_code, 200)
+
         # Ensure correct URL for `download_document`
         document_url = example.document.download_document
         expected_url = reverse('croco_document_download',
