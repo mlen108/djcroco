@@ -1,7 +1,6 @@
-from unittest import TestCase
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
+from django.utils import unittest
 from django.test.client import Client
 
 from .models import Example
@@ -24,44 +23,57 @@ TEST_DOC_DATA = (  # Multiline string, not tuple.
 TEST_DOC_NAME = 'test_doc_file.pdf'
 
 
-class CrocoTestCase(TestCase):
+client = Client()
+
+def initial_setup():
+    """ Inits all here as we do not want doing it in *every* test """
+    # Create sample data
+    example = Example.objects.create(name='Test item',
+        document=SimpleUploadedFile(TEST_DOC_NAME, TEST_DOC_DATA))
+
+    # Get data out of the model
+    instance = Example.objects.get(id=example.id)
+    return instance
+
+
+class CrocoTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.instance = initial_setup()
+
     def assertContains(self, test_value, expected_set):
         # That assert method does not exist in Py2.6
         msg = "%s does not contain %s" % (test_value, expected_set)
         self.assert_(test_value not in expected_set, msg)
 
-    def test_croco(self):
-        client = Client()
-
-        # Create sample data
-        example = Example.objects.create(name='Test item',
-            document=SimpleUploadedFile(TEST_DOC_NAME, TEST_DOC_DATA))
-
-        # Get sample data so we have correct instanties
-        example = Example.objects.get(id=example.id)
-
+    def test_document_name(self):
         # Ensure document has correct name
-        self.assertEqual(example.document.name, TEST_DOC_NAME)
+        self.assertEqual(self.instance.document.name, TEST_DOC_NAME)
 
+    def test_document_size(self):
         # Ensure correct size
-        self.assertEqual(example.document.size, 679)
-        self.assertEqual(example.document.size_human, '679 bytes')
+        self.assertEqual(self.instance.document.size, 679)
+        self.assertEqual(self.instance.document.size_human, '679 bytes')
 
+    def test_document_type(self):
         # Ensure correct file type
-        self.assertEqual(example.document.type, 'pdf')
+        self.assertEqual(self.instance.document.type, 'pdf')
 
+    def test_document_uuid(self):
         # Ensure correct length of UUID
         # UUID is 32 long chars, but there is 36 including dash chars
-        uuid = example.document.uuid
+        uuid = self.instance.document.uuid
         self.assertEqual(len(uuid), 36)
 
+    def test_document_thumbnail(self):
         # Ensure in-line image was returned
-        self.assertContains(example.document.thumbnail, 'data:image/png')
+        self.assertContains(self.instance.document.thumbnail, 'data:image/png')
 
+    def test_document_url(self):
         # Ensure correct URL was returned for `url`
-        url = example.document.url
+        url = self.instance.document.url
         expected_url = reverse('croco_document_view',
-            kwargs={'uuid': uuid})
+            kwargs={'uuid': self.instance.document.uuid})
         self.assertEqual(url, expected_url)
 
         # Ensure correct redirect was made
@@ -69,10 +81,11 @@ class CrocoTestCase(TestCase):
         self.assertContains(response._headers['location'][1], 'crocodoc.com')
         self.assertEqual(response.status_code, 302)
 
+    def test_document_content_url(self):
         # Ensure correct URL for `content_url`
-        content_url = example.document.content_url
+        content_url = self.instance.document.content_url
         expected_url = reverse('croco_document_content',
-            kwargs={'uuid': uuid})
+            kwargs={'uuid': self.instance.document.uuid})
         self.assertEqual(content_url, expected_url)
 
         # Ensure correct response
@@ -80,10 +93,11 @@ class CrocoTestCase(TestCase):
         self.assertContains(response.content, 'crocodoc.com')
         self.assertEqual(response.status_code, 200)
 
+    def test_document_edit_url(self):
         # Ensure correct URL for `edit_url`
-        edit_url = example.document.edit_url(user_id=1, user_name='matt')
+        edit_url = self.instance.document.edit_url(user_id=1, user_name='matt')
         kwargs = {
-            'uuid': uuid,
+            'uuid': self.instance.document.uuid,
             'user_id': 1,
             'user_name': 'matt',
         }
@@ -95,10 +109,11 @@ class CrocoTestCase(TestCase):
         self.assertContains(response.content, 'crocodoc.com')
         self.assertEqual(response.status_code, 200)
 
+    def test_document_annotations(self):
         # Ensure correct URL for annotations
-        annotations_url = example.document.annotations_url(user_id=1)
+        annotations_url = self.instance.document.annotations_url(user_id=1)
         kwargs = {
-            'uuid': uuid,
+            'uuid': self.instance.document.uuid,
             'user_id': 1,
         }
         expected_url = reverse('croco_document_annotations', kwargs=kwargs)
@@ -109,10 +124,11 @@ class CrocoTestCase(TestCase):
         self.assertContains(response.content, 'crocodoc.com')
         self.assertEqual(response.status_code, 200)
 
+    def test_document_download(self):
         # Ensure correct URL for `download_document`
-        document_url = example.document.download_document
+        document_url = self.instance.document.download_document
         expected_url = reverse('croco_document_download',
-            kwargs={'uuid': uuid})
+            kwargs={'uuid': self.instance.document.uuid})
         self.assertEqual(document_url, expected_url)
 
         # Ensure correct response
@@ -122,10 +138,11 @@ class CrocoTestCase(TestCase):
         self.assertEqual(response._headers['content-type'][1],
             'application/pdf')
 
+    def test_thumbnail_download(self):
         # Ensure correct URL for `download_thumbnail`
-        thumbnail_url = example.document.download_thumbnail
+        thumbnail_url = self.instance.document.download_thumbnail
         expected_url = reverse('croco_thumbnail_download',
-            kwargs={'uuid': uuid})
+            kwargs={'uuid': self.instance.document.uuid})
         self.assertEqual(thumbnail_url, expected_url)
 
         # Ensure correct response
@@ -133,10 +150,11 @@ class CrocoTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response._headers['content-type'][1], 'image/png')
 
+    def test_text_download(self):
         # Ensure correct URL for `download_text`
-        text_url = example.document.download_text
+        text_url = self.instance.document.download_text
         expected_url = reverse('croco_text_download',
-            kwargs={'uuid': uuid})
+            kwargs={'uuid': self.instance.document.uuid})
         self.assertEqual(text_url, expected_url)
 
         # Ensure text is not returned for test account (an account without
