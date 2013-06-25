@@ -12,7 +12,7 @@ from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
 
 if get_version()[:3] == '1.3':
-    string_types = str
+    string_types = basestring
 else:
     from django.utils.six import string_types
 

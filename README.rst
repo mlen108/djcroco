@@ -141,7 +141,7 @@ Dependencies
 ------------
 
 - Python 2.6.x, 2.7.x
-- Django 1.4.x, 1.5.x
+- Django 1.3.x, 1.4.x, 1.5.x
 - `crocodoc <https://pypi.python.org/pypi/crocodoc>`_ 0.1.1
 
-Django 1.3.x and/or Python 3.x will be supported soon!
+Python 3.x will be supported soon!
