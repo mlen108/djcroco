@@ -2,15 +2,19 @@ import base64
 import json
 import os
 
-from django import forms
+from django import forms, get_version
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import Storage
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.template.defaultfilters import filesizeformat
-from django.utils import six
 from django.utils.translation import ugettext_lazy as _
+
+if get_version()[:3] == '1.3':
+    string_types = str
+else:
+    from django.utils.six import string_types
 
 import crocodoc
 from crocodoc import CrocodocError
@@ -114,7 +118,7 @@ class CrocoField(models.Field):
             return None
 
         try:
-            if isinstance(value, six.string_types):
+            if isinstance(value, string_types):
                 return CrocoFieldObject(self, json.loads(value))
         except ValueError:
             raise

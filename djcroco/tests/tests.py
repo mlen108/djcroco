@@ -21,7 +21,7 @@ TEST_DOC_DATA = (  # Multiline string, not tuple.
     '\n0000000301 00000 n \n0000000380 00000 n \ntrailer\n<<\n  /Size 6\n  '
     '/Root 1 0 R\n>>\nstartxref\n492\n%%EOF\n'
 )
-TEST_DOC_NAME = 'test_doc_file.pdf'
+TEST_DOC_NAME = u'test_doc_file.pdf'
 
 
 class CrocoTestCase(TestCase):
