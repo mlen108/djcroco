@@ -62,10 +62,12 @@ The maximum dimensions for thumbnail is 300x300.
 Render the awesomeness
 ----------------------
 
+Documents
+^^^^^^^^^
+
     {{ obj.document.name }}
 
 Returns name of the document.
-
 
     {{ obj.document.size }}
 
@@ -83,9 +85,15 @@ Returns type (extension) of the document.
 
 Returns UUID of the document (each Crocodoc document has unique id).
 
+Thumbnails
+^^^^^^^^^^
+
     {{ obj.document.thumbnail }}
 
 Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.org/wiki/Data_URI_scheme>`_ for more details).
+
+URLs
+^^^^
 
     {{ obj.document.url }}
 
@@ -95,19 +103,21 @@ Returns url of the document so it can be viewed directly.
 
 Returns url of the document wrapped in `HttpResponse <https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpResponse>`_ object.
 
-    {% url 'croco_document_edit' uuid=obj.document.uuid user_id=request.user.id user_name=request.user.username %}
+Annotations
+^^^^^^^^^^^
+
+    {% url 'croco_document_edit' uuid=obj.document.uuid user_id=<user_id> user_name=<user_name> %}
 
 Returns url of the document to allow user to create annotations.
 `See the docs <https://crocodoc.com/docs/walkthrough/comments/>`_ for more details.
 
-Note: you need to call djcroco's url directly and pass above params.
-
-
-    {% url 'croco_document_annotations' uuid=obj.document.uuid
-    user_id=request.user.id %}
+    {% url 'croco_document_annotations' uuid=obj.document.uuid user_id=<user_id> %}
 
 Returns url of the document with annotations/comments made by user with given
 `user_id`.
+
+Downloads
+^^^^^^^^^
 
     {{ obj.document.download_document }}
 
