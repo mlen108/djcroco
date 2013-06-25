@@ -7,11 +7,11 @@ djcroco
 .. image:: https://travis-ci.org/mattack108/djcroco.png
    :target: https://travis-ci.org/mattack108/djcroco
 
-`djcroco` is a custom `Django <https://www.djangoproject.com/>`_ model field to
+``djcroco`` is a custom `Django <https://www.djangoproject.com/>`_ model field to
 add support for the `Crocodoc API <https://crocodoc.com/>`_. Most of the API
 features are covered.
 
-`djcroco` is supported by `Incuna <http://incuna.com>`_ (an awesome company
+``djcroco`` is supported by `Incuna <http://incuna.com>`_ (an awesome company
 I work for).
 
 Installation
