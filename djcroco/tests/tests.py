@@ -4,7 +4,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 
-from .fields import BytesIO
+from djcroco.fields import BytesIO
 from .models import Example
 
 
@@ -67,8 +67,8 @@ class CrocoTestCase(TestCase):
 
         # Ensure correct redirect was made
         response = client.get(url)
-        self.assertContains(response._headers['location'][1], 'crocodoc.com')
         self.assertEqual(response.status_code, 302)
+        self.assertContains(response._headers['location'][1], 'crocodoc.com')
 
         # Ensure correct URL for `content_url`
         content_url = example.document.content_url
@@ -78,8 +78,8 @@ class CrocoTestCase(TestCase):
 
         # Ensure correct response
         response = client.get(content_url)
-        self.assertContains(response.content, 'crocodoc.com')
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response.content, 'crocodoc.com')
 
         # Ensure correct URL for `download_document`
         document_url = example.document.download_document
@@ -89,8 +89,8 @@ class CrocoTestCase(TestCase):
 
         # Ensure correct response
         response = client.get(document_url)
-        self.assertEqual(len(response.content), 679)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.content), 679)
         self.assertEqual(response._headers['content-type'][1],
             'application/pdf')
 
