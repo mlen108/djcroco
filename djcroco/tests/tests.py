@@ -135,7 +135,7 @@ class CrocoTestCase(unittest.TestCase):
         response = client.get(document_url)
         # self.assertEqual(response.status_code, 200)
         if response.status_code == 400:
-            print response.error_message
+            print response
             print response.content
             1/0
         self.assertEqual(len(response.content), 679)
