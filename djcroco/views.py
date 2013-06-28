@@ -48,6 +48,8 @@ class CrocoDocumentDownload(View):
 
 
 class CrocoDocumentEdit(View):
+    redirect = None
+
     def get(self, request, *args, **kwargs):
         uuid = kwargs.pop('uuid', None)
         user_id = kwargs.pop('user_id', None)
@@ -70,10 +72,14 @@ class CrocoDocumentEdit(View):
 
         url = 'https://crocodoc.com/view/{0}'.format(session)
 
+        if self.redirect:
+            return HttpResponseRedirect(url)
         return HttpResponse(content=url)
 
 
 class CrocoDocumentAnnotations(View):
+    redirect = None
+
     def get(self, request, *args, **kwargs):
         uuid = kwargs.pop('uuid', None)
         user_id = kwargs.pop('user_id', None)
@@ -88,6 +94,8 @@ class CrocoDocumentAnnotations(View):
 
         url = 'https://crocodoc.com/view/{0}'.format(session)
 
+        if self.redirect:
+            return HttpResponseRedirect(url)
         return HttpResponse(content=url)
 
 

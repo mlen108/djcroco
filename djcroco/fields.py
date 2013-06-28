@@ -83,8 +83,21 @@ class CrocoFieldObject(object):
             'user_name': user_name,
         })
 
+    def edit_redirect_url(self, user_id, user_name):
+        return reverse('croco_document_edit_redirect', kwargs={
+            'uuid': self.attrs['uuid'],
+            'user_id': user_id,
+            'user_name': user_name,
+        })
+
     def annotations_url(self, user_id):
         return reverse('croco_document_annotations', kwargs={
+            'uuid': self.attrs['uuid'],
+            'user_id': user_id,
+        })
+
+    def annotations_redirect_url(self, user_id):
+        return reverse('croco_document_annotations_redirect', kwargs={
             'uuid': self.attrs['uuid'],
             'user_id': user_id,
         })

@@ -1,3 +1,5 @@
+import time
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.utils import unittest
@@ -40,6 +42,10 @@ class CrocoTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.instance = initial_setup()
+
+    def setUp(self):
+        # there is a race conditions somewhere so sleep between each test
+        time.sleep(1)
 
     def assertContains(self, test_value, expected_set):
         # That assert method does not exist in Py2.6
@@ -93,7 +99,7 @@ class CrocoTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response.content, 'crocodoc.com')
 
-    def test_document_edit_url(self):
+    def test_document_edit(self):
         # Ensure correct URL for `edit_url`
         edit_url = self.instance.document.edit_url(user_id=1, user_name='matt')
         kwargs = {
@@ -108,6 +114,22 @@ class CrocoTestCase(unittest.TestCase):
         response = client.get(edit_url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response.content, 'crocodoc.com')
+
+    def test_document_edit_redirect(self):
+        # Ensure correct URL for `edit_url`
+        edit_url = self.instance.document.edit_redirect_url(user_id=1, user_name='matt')
+        kwargs = {
+            'uuid': self.instance.document.uuid,
+            'user_id': 1,
+            'user_name': 'matt',
+        }
+        expected_url = reverse('croco_document_edit_redirect', kwargs=kwargs)
+        self.assertEqual(edit_url, expected_url)
+
+        # Ensure correct response
+        response = client.get(edit_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertContains(response._headers['location'][1], 'crocodoc.com')
 
     def test_document_annotations(self):
         # Ensure correct URL for annotations
@@ -124,6 +146,21 @@ class CrocoTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response.content, 'crocodoc.com')
 
+    def test_document_annotations_redirect(self):
+        # Ensure correct URL for annotations
+        annotations_url = self.instance.document.annotations_redirect_url(user_id=1)
+        kwargs = {
+            'uuid': self.instance.document.uuid,
+            'user_id': 1,
+        }
+        expected_url = reverse('croco_document_annotations_redirect', kwargs=kwargs)
+        self.assertEqual(annotations_url, expected_url)
+
+        # Ensure correct response
+        response = client.get(annotations_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertContains(response._headers['location'][1], 'crocodoc.com')
+
     def test_document_download(self):
         # Ensure correct URL for `download_document`
         document_url = self.instance.document.download_document
@@ -132,11 +169,11 @@ class CrocoTestCase(unittest.TestCase):
         self.assertEqual(document_url, expected_url)
 
         # Ensure correct response
-        # response = client.get(document_url)
-        # self.assertEqual(response.status_code, 200)
-        # self.assertEqual(len(response.content), 679)
-        # self.assertEqual(response._headers['content-type'][1],
-        #     'application/pdf')
+        response = client.get(document_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.content), 679)
+        self.assertEqual(response._headers['content-type'][1],
+            'application/pdf')
 
     def test_thumbnail_download(self):
         # Ensure correct URL for `download_thumbnail`

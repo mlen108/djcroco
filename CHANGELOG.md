@@ -1,6 +1,12 @@
 Changelog for djcroco
 =====================
 
+0.2.5
+=====
+
+* Allow redirects for annotation urls.
+* Add missing tests for annotations.
+
 0.2.4
 =====
 
