@@ -1,11 +1,14 @@
 djcroco
 =======
 
+.. image:: https://travis-ci.org/mattack108/djcroco.png
+   :target: https://travis-ci.org/mattack108/djcroco
+
 .. image:: https://pypip.in/v/djcroco/badge.png
    :target: https://pypi.python.org/pypi/djcroco
 
-.. image:: https://travis-ci.org/mattack108/djcroco.png
-   :target: https://travis-ci.org/mattack108/djcroco
+.. image:: https://pypip.in/d/djcroco/badge.png
+   :target: https://pypi.python.org/pypi/djcroco
 
 ``djcroco`` is a custom `Django <https://www.djangoproject.com/>`_ model field to
 add support for the `Crocodoc API <https://crocodoc.com/>`_.
