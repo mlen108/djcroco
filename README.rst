@@ -66,6 +66,22 @@ Where tuple is represented as ``(width, height)``.
 If you do not pass custom thumbnail size, the default will be used (100x100).
 The maximum dimensions for thumbnail is 300x300.
 
+
+Thumbnail caching
+-----------------
+
+By default the thumbnail will be generated every time the template gets rendered.
+This could be time expensive if you have e.g 20 items on a single page. To avoid
+above issue you can point to a field where the thumbnail will be saved and served
+from there the next time.
+
+    class Example(models.Model):
+        name = models.CharField(max_length=255)
+        document = CrocoField(thumbnail_field='my_thumbnail')
+        my_thumbnail = models.ImageField(upload_to='whatever/')
+
+Note that the `thumbnail_field` must be a type of `ImageField`.
+
 Render the awesomeness
 ----------------------
 
