@@ -1,7 +1,7 @@
 djcroco
 =======
 
-.. image:: https://travis-ci.org/mattack108/djcroco.png
+.. image:: https://travis-ci.org/mattack108/djcroco.png?branch=master
    :target: https://travis-ci.org/mattack108/djcroco
 
 .. image:: https://pypip.in/v/djcroco/badge.png
