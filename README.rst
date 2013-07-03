@@ -82,7 +82,7 @@ the next time. ::
         my_thumbnail = models.ImageField(upload_to='whatever/')
 
 
-Note that the `thumbnail_field` must be a type of `ImageField 
+Note that the ``thumbnail_field`` must be a type of `ImageField 
 <https://docs.djangoproject.com/en/dev/ref/models/fields/#imagefield>`_.
 
 Render the awesomeness
