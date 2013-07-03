@@ -74,12 +74,13 @@ By default the thumbnail will be generated every time template gets rendered and
 this involves hitting Crocodoc API for each thumbnail. It could be time
 expensive if you have many items on a single page. To avoid above issue you
 can point to a field where the thumbnail will be saved and served from there
-the next time.
+the next time. ::
 
     class Example(models.Model):
         name = models.CharField(max_length=255)
         document = CrocoField(thumbnail_field='my_thumbnail')
         my_thumbnail = models.ImageField(upload_to='whatever/')
+
 
 Note that the `thumbnail_field` must be a type of `ImageField 
 <https://docs.djangoproject.com/en/dev/ref/models/fields/#imagefield>`_.
