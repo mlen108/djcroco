@@ -62,6 +62,8 @@ class CrocoFieldObject(object):
 
     @property
     def thumbnail(self):
+        if self.instance.thumbnail_field:
+            return self.instance.thumbnail_field.url
         return self.instance._get_thumbnail(self.attrs['uuid'])
 
     @property
@@ -134,6 +136,7 @@ class CrocoField(models.Field):
     def __init__(self, verbose_name=None, name=None, *args, **kwargs):
         self.storage = CrocoStorage()
         self.thumbnail_size = kwargs.pop('thumbnail_size', (100, 100))
+        self.thumbnail_field = kwargs.pop('thumbnail_field', None)
         super(CrocoField, self).__init__(*args, **kwargs)
 
     def get_internal_type(self):
@@ -151,6 +154,17 @@ class CrocoField(models.Field):
         return value
 
     def pre_save(self, model_instance, add):
+        meta = model_instance._meta
+        klass = meta.object_name
+        if not self.thumbnail_field in meta.get_all_field_names():
+            msg = "No field '{0}' found on '{1}' class."
+            raise AttributeError(msg.format(self.thumbnail_field, klass))
+
+        field = meta.get_field(self.thumbnail_field)
+        if not isinstance(field, models.ImageField):
+            msg = "Field '{0}' must be an instance of '{1}'."
+            raise AttributeError(msg.format(self.thumbnail_field, models.ImageField))
+
         value = super(CrocoField, self).pre_save(model_instance, add)
         if not isinstance(value, CrocoFieldObject):
             croco_uuid = self.storage._save(value)
@@ -161,6 +175,8 @@ class CrocoField(models.Field):
                 'type': self._file_ext(value.name),
             }
             value = CrocoFieldObject(self, file_attrs)
+
+            # TODO: clean old thumbnail if exists
         return self.get_prep_value(value)
 
     def get_prep_value(self, value):
@@ -180,8 +196,11 @@ class CrocoField(models.Field):
 
     def _get_thumbnail(self, uuid):
         """
-        Returns in-line image using URI scheme.
-        TODO: add support for custom image field (so thumbnails are cached)
+        Gets thumbnail.
+
+        If thumbnail cache field is present it will save the thumbnail to that
+        field and return it from there till it changes. Or returns in-line
+        image using URI scheme if no cache field available.
         """
         try:
             status = crocodoc.document.status(uuid)
@@ -192,6 +211,8 @@ class CrocoField(models.Field):
                         'height': self.thumbnail_size[1],
                     }
                     thumb = crocodoc.download.thumbnail(uuid, **attrs)
+                    # TODO: save thumbnail and return its url
+                    # or return below if not thumbnail cache field
                     return "data:image/png;base64," + base64.b64encode(thumb)
                 except CrocodocError as e:
                     return e.error_message
