@@ -5,7 +5,9 @@ import os
 from django import forms, get_version
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.core.files import File
 from django.core.files.storage import Storage
+from django.core.files.temp import NamedTemporaryFile
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.template.defaultfilters import filesizeformat
@@ -62,8 +64,6 @@ class CrocoFieldObject(object):
 
     @property
     def thumbnail(self):
-        if self.instance.thumbnail_field:
-            return self.instance.thumbnail_field.url
         return self.instance._get_thumbnail(self.attrs['uuid'])
 
     @property
@@ -153,17 +153,21 @@ class CrocoField(models.Field):
             raise
         return value
 
-    def pre_save(self, model_instance, add):
-        meta = model_instance._meta
-        klass = meta.object_name
-        if not self.thumbnail_field in meta.get_all_field_names():
+    def _check_thumbnail_field(self, instance):
+        obj = instance._meta
+        if not self.thumbnail_field in obj.get_all_field_names():
             msg = "No field '{0}' found on '{1}' class."
-            raise AttributeError(msg.format(self.thumbnail_field, klass))
+            raise AttributeError(msg.format(self.thumbnail_field, obj.object_name))
 
-        field = meta.get_field(self.thumbnail_field)
+        field = obj.get_field(self.thumbnail_field)
         if not isinstance(field, models.ImageField):
             msg = "Field '{0}' must be an instance of '{1}'."
             raise AttributeError(msg.format(self.thumbnail_field, models.ImageField))
+
+    def pre_save(self, model_instance, add):
+        # this is done here as it is the only place it has model's instance
+        # available. perhaps is should be moved somewhere else?
+        self._check_thumbnail_field(model_instance)
 
         value = super(CrocoField, self).pre_save(model_instance, add)
         if not isinstance(value, CrocoFieldObject):
@@ -176,6 +180,7 @@ class CrocoField(models.Field):
             }
             value = CrocoFieldObject(self, file_attrs)
 
+            # self.thumbnail_field = model_instance._meta.get_field(self.thumbnail_field)
             # TODO: clean old thumbnail if exists
         return self.get_prep_value(value)
 
@@ -195,13 +200,11 @@ class CrocoField(models.Field):
         return super(CrocoField, self).formfield(**defaults)
 
     def _get_thumbnail(self, uuid):
-        """
-        Gets thumbnail.
+        thumbnail_field = self.model._meta.get_field(self.thumbnail_field)
+        print callable(thumbnail_field.storage.url)
+        if thumbnail_field:
+            return thumbnail_field.storage.url
 
-        If thumbnail cache field is present it will save the thumbnail to that
-        field and return it from there till it changes. Or returns in-line
-        image using URI scheme if no cache field available.
-        """
         try:
             status = crocodoc.document.status(uuid)
             if status.get('error') is None:
@@ -210,16 +213,33 @@ class CrocoField(models.Field):
                         'width': self.thumbnail_size[0],
                         'height': self.thumbnail_size[1],
                     }
-                    thumb = crocodoc.download.thumbnail(uuid, **attrs)
-                    # TODO: save thumbnail and return its url
-                    # or return below if not thumbnail cache field
-                    return "data:image/png;base64," + base64.b64encode(thumb)
+                    thumbnail = crocodoc.download.thumbnail(uuid, **attrs)
+                    if not self.thumbnail_field:
+                        return "data:image/png;base64," + base64.b64encode(thumbnail)
+
+                    return self._save_thumbnail(uuid, thumbnail)
                 except CrocodocError as e:
                     return e.error_message
             else:
                 return status.get('error')
         except CrocodocError as e:
             return e.error_message
+
+    def _save_thumbnail(self, uuid, thumbnail):
+        img_temp = NamedTemporaryFile(delete=True)
+        img_temp.write(thumbnail)
+        img_temp.seek(0)
+        img_temp.flush()
+
+        filename = '{0}.png'.format(uuid)
+
+        thumbnail_field = self.model._meta.get_field(self.thumbnail_field)
+
+        thumbnail_field.storage.save(
+            filename,
+            File(img_temp))
+       
+        return thumbnail_field.storage.url
 
     def _file_ext(self, filename):
         """ Return an extension of the file """
