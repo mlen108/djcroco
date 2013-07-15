@@ -39,6 +39,15 @@ Or alternatively as env variable: ::
 
     export CROCO_API_TOKEN='<api_token>'
 
+When optional parameters for URLs are used (see below for more details) - then
+you need to add ``djcroco`` to ``INSTALLED_APPS``: ::
+
+    INSTALLED_APPS += ('djcroco',)
+
+And load its template tags in the template you wish to use them in: ::
+
+    {% load croco_tags %}
+
 Usage
 -----
 
@@ -64,10 +73,10 @@ You can pass ``thumbnail_size`` like so: ::
 
     document = CrocoField(thumbnail_size=(150, 150))
 
-Where tuple is represented as ``(width, height)``.
+Where tuple is represented as *(width, height)*.
 
 If you do not pass custom thumbnail size, the default will be used (100x100).
-The maximum dimensions for thumbnail is 300x300.
+The maximum dimensions for thumbnail is **300x300**.
 
 Render the awesomeness
 ----------------------
@@ -75,67 +84,116 @@ Render the awesomeness
 Documents
 ^^^^^^^^^
 
+::
+
     {{ obj.document.name }}
 
 Returns name of the document.
+
+::
 
     {{ obj.document.size }}
 
 Returns size of the document (in bytes).
 
+::
+
     {{ obj.document.size_human }}
 
 Returns human-readable size of the document (eg. 1.3 MB).
+
+::
 
     {{ obj.document.type }}
 
 Returns type (extension) of the document.
 
+::
+
     {{ obj.document.uuid }}
 
-Returns UUID of the document (each Crocodoc document has unique id).
+Returns UUID of the document (note: each Crocodoc document has unique id).
 
 Thumbnails
 ^^^^^^^^^^
 
+::
+
     {{ obj.document.thumbnail }}
 
-Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.org/wiki/Data_URI_scheme>`_ for more details).
+Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.org/wiki/Data_URI_scheme>`_ for more details). See below for how to download a thumbnail.
 
 URLs
 ^^^^
+
+::
 
     {{ obj.document.url }}
 
 Returns url of the document so it can be viewed directly.
 
+::
+
     {{ obj.document.content_url }}
 
 Returns url of the document wrapped in `HttpResponse <https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpResponse>`_ object.
 
-Annotations
-^^^^^^^^^^^
+Both ``url`` and ``content_url`` can be extended with `optional parameters <https://crocodoc.com/docs/api/#session-create>`_.
 
-    {% url 'croco_document_edit' uuid=obj.document.uuid user_id=<user_id> user_name=<user_name> %}
+::
 
-Returns url of the document to allow user to create annotations.
-`See the docs <https://crocodoc.com/docs/walkthrough/comments/>`_ for more details.
+    {{ obj.document.url|editable:"true"|user_id:"1"|user_name:"admin" }}
 
-    {% url 'croco_document_annotations' uuid=obj.document.uuid user_id=<user_id> %}
+``editable`` param allows users to create annotations and comments while viewing the document.
+**Default: false**
 
-Returns url of the document with annotations/comments made by user with given
-`user_id`.
+``user_id`` and ``user_name`` will be shown in the viewer to attribute annotations and comments to their author. **Required if editable is true**
+
+::
+
+    {{ obj.document.url|user_filter:"1,2,3" }}
+
+Limits which users' annotations and comments are shown. Possible values are: *all*, *none*, or a comma-separated list of user IDs. **Default: all**
+
+**Note**: ``user_filter`` is a renamed version of Crocodoc's ``filter`` in order to work in Django template system.
+
+Full list of supported `parameters <https://crocodoc.com/docs/api/#session-create>`_.
 
 Downloads
 ^^^^^^^^^
+
+::
 
     {{ obj.document.download_document }}
 
 Returns the original document in PDF format.
 
+::
+
+    {{ obj.document.download_document|annotated:"true" }}
+
+Returns the original document with annotations. **Default: false**
+
+::
+
+    {{ obj.document.download_document|user_filter:"1,2,3" }}
+
+Returns the original document with annotations limited to given users.
+Possible values are: *all*, *none*, or a comma-separated list of user IDs. **Default: all**
+
+::
+
     {{ obj.document.download_thumbnail }}
 
 Returns a thumbnail of the document's first page in PNG format.
+
+::
+
+    {{ obj.document.download_thumbnail|size:"99x99" }}
+
+Same as ``download_thumbnail`` with custom dimensions of the thumbnail in the format *{width}x{height}*. Largest dimensions allowed are 300x300. **Default: 100x100**
+
+::
 
     {{ obj.document.download_text }}
 

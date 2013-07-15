@@ -9,27 +9,12 @@ else:
 import views
 
 urlpatterns = patterns('',
-    url(r'^croco_document_view/(?P<uuid>[-\w]+)$',
+    url(r'^croco_document/(?P<uuid>[-\w]+)$',
         views.CrocoDocumentView.as_view(redirect=True),
-        name='croco_document_view'),
+        name='croco_document_url'),
     url(r'^croco_document_content/(?P<uuid>[-\w]+)$',
         views.CrocoDocumentView.as_view(),
-        name='croco_document_content'),
-
-    url(r'^croco_document_edit/(?P<uuid>[-\w]+)/(?P<user_id>\d+)/(?P<user_name>.+)$',
-        views.CrocoDocumentEdit.as_view(),
-        name='croco_document_edit'),
-    url(r'^croco_document_edit_redirect/(?P<uuid>[-\w]+)/(?P<user_id>\d+)/(?P<user_name>.+)$',
-        views.CrocoDocumentEdit.as_view(redirect=True),
-        name='croco_document_edit_redirect'),
-
-    url(r'^croco_document_annotations/(?P<uuid>[-\w]+)/(?P<user_id>\d+)$',
-        views.CrocoDocumentAnnotations.as_view(),
-        name='croco_document_annotations'),
-    url(r'^croco_document_annotations_redirect/(?P<uuid>[-\w]+)/(?P<user_id>\d+)$',
-        views.CrocoDocumentAnnotations.as_view(redirect=True),
-        name='croco_document_annotations_redirect'),
-
+        name='croco_document_content_url'),
     url(r'^croco_document_download/(?P<uuid>[-\w]+)$',
         views.CrocoDocumentDownload.as_view(),
         name='croco_document_download'),
