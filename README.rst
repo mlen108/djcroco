@@ -75,10 +75,13 @@ Render the awesomeness
 Documents
 ^^^^^^^^^
 
-    ::
+::
+
     {{ obj.document.name }}
 
 Returns name of the document.
+
+::
 
     {{ obj.document.size }}
 
