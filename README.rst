@@ -142,7 +142,7 @@ Both ``url`` and ``content_url`` can be extended with `optional parameters <http
 
 ::
 
-    {{ obj.document.url|editable:true|user_id:"1"|user_name:"admin" }}
+    {{ obj.document.url|editable:"true"|user_id:"1"|user_name:"admin" }}
 
 ``editable`` param allows users to create annotations and comments while viewing the document.
 **Default: false**
@@ -170,7 +170,7 @@ Returns the original document in PDF format.
 
 ::
 
-    {{ obj.document.download_document|annotated:true }}
+    {{ obj.document.download_document|annotated:"true" }}
 
 Returns the original document with annotations. **Default: false**
 
