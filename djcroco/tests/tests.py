@@ -78,7 +78,7 @@ class CrocoTestCase(unittest.TestCase):
     def test_document_url(self):
         # Ensure correct URL was returned for `url`
         url = self.instance.document.url
-        expected_url = reverse('croco_document_view',
+        expected_url = reverse('croco_document_url',
             kwargs={'uuid': self.instance.document.uuid})
         self.assertEqual(url, expected_url)
 
@@ -90,7 +90,7 @@ class CrocoTestCase(unittest.TestCase):
     def test_document_content_url(self):
         # Ensure correct URL for `content_url`
         content_url = self.instance.document.content_url
-        expected_url = reverse('croco_document_content',
+        expected_url = reverse('croco_document_content_url',
             kwargs={'uuid': self.instance.document.uuid})
         self.assertEqual(content_url, expected_url)
 
@@ -98,68 +98,6 @@ class CrocoTestCase(unittest.TestCase):
         response = client.get(content_url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response.content, 'crocodoc.com')
-
-    def test_document_edit(self):
-        # Ensure correct URL for `edit_url`
-        edit_url = self.instance.document.edit_url(user_id=1, user_name='matt')
-        kwargs = {
-            'uuid': self.instance.document.uuid,
-            'user_id': 1,
-            'user_name': 'matt',
-        }
-        expected_url = reverse('croco_document_edit', kwargs=kwargs)
-        self.assertEqual(edit_url, expected_url)
-
-        # Ensure correct response
-        response = client.get(edit_url)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response.content, 'crocodoc.com')
-
-    def test_document_edit_redirect(self):
-        # Ensure correct URL for `edit_url`
-        edit_url = self.instance.document.edit_redirect_url(user_id=1, user_name='matt')
-        kwargs = {
-            'uuid': self.instance.document.uuid,
-            'user_id': 1,
-            'user_name': 'matt',
-        }
-        expected_url = reverse('croco_document_edit_redirect', kwargs=kwargs)
-        self.assertEqual(edit_url, expected_url)
-
-        # Ensure correct response
-        response = client.get(edit_url)
-        self.assertEqual(response.status_code, 302)
-        self.assertContains(response._headers['location'][1], 'crocodoc.com')
-
-    def test_document_annotations(self):
-        # Ensure correct URL for annotations
-        annotations_url = self.instance.document.annotations_url(user_id=1)
-        kwargs = {
-            'uuid': self.instance.document.uuid,
-            'user_id': 1,
-        }
-        expected_url = reverse('croco_document_annotations', kwargs=kwargs)
-        self.assertEqual(annotations_url, expected_url)
-
-        # Ensure correct response
-        response = client.get(annotations_url)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response.content, 'crocodoc.com')
-
-    def test_document_annotations_redirect(self):
-        # Ensure correct URL for annotations
-        annotations_url = self.instance.document.annotations_redirect_url(user_id=1)
-        kwargs = {
-            'uuid': self.instance.document.uuid,
-            'user_id': 1,
-        }
-        expected_url = reverse('croco_document_annotations_redirect', kwargs=kwargs)
-        self.assertEqual(annotations_url, expected_url)
-
-        # Ensure correct response
-        response = client.get(annotations_url)
-        self.assertEqual(response.status_code, 302)
-        self.assertContains(response._headers['location'][1], 'crocodoc.com')
 
     def test_document_download(self):
         # Ensure correct URL for `download_document`
