@@ -3,6 +3,7 @@ import time
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.utils import unittest
+from django.template import Context, Template
 from django.test.client import Client
 
 from .models import Example
@@ -27,6 +28,7 @@ TEST_DOC_NAME = 'test_doc_file.pdf'
 
 client = Client()
 
+
 def initial_setup():
     """ Inits all here as we do not want doing it in *every* test """
     # Create sample data
@@ -46,6 +48,12 @@ class CrocoTestCase(unittest.TestCase):
     def setUp(self):
         # there is a race conditions somewhere so sleep between each test
         time.sleep(1)
+
+    def render(self, tmpl):
+        tmplout = "{% load croco_tags %}{% autoescape off %}"
+        tmplout += tmpl
+        tmplout += "{% endautoescape %}"
+        return Template(tmplout).render(Context({'obj': self.instance}))
 
     def assertContains(self, test_value, expected_set):
         # That assert method does not exist in Py2.6
@@ -87,6 +95,18 @@ class CrocoTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertContains(response._headers['location'][1], 'crocodoc.com')
 
+    def test_document_url_with_annotations(self):
+        tmpl = "{{ obj.document.url|annotated:'true' }}"
+        response = client.get(self.render(tmpl))
+        self.assertEqual(response.status_code, 302)
+        self.assertContains(response._headers['location'][1], 'crocodoc.com')
+
+    def test_document_url_with_editable_and_user(self):
+        tmpl = "{{ obj.document.url|editable:'true'|user_id:'1'|user_name:'admin' }}"
+        response = client.get(self.render(tmpl))
+        self.assertEqual(response.status_code, 302)
+        self.assertContains(response._headers['location'][1], 'crocodoc.com')
+
     def test_document_content_url(self):
         # Ensure correct URL for `content_url`
         content_url = self.instance.document.content_url
@@ -96,6 +116,12 @@ class CrocoTestCase(unittest.TestCase):
 
         # Ensure correct response
         response = client.get(content_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response.content, 'crocodoc.com')
+
+    def test_document_content_url_with_user_filter(self):
+        tmpl = "{{ obj.document.content_url|user_filter:'1,2' }}"
+        response = client.get(self.render(tmpl))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response.content, 'crocodoc.com')
 
@@ -113,6 +139,14 @@ class CrocoTestCase(unittest.TestCase):
         self.assertEqual(response._headers['content-type'][1],
             'application/pdf')
 
+    def test_document_download_with_annotations(self):
+        tmpl = "{{ obj.document.download_document|annotated:'true' }}"
+        response = client.get(self.render(tmpl))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.content), 1049)
+        self.assertEqual(response._headers['content-type'][1],
+            'application/pdf')
+
     def test_thumbnail_download(self):
         # Ensure correct URL for `download_thumbnail`
         thumbnail_url = self.instance.document.download_thumbnail
@@ -122,6 +156,12 @@ class CrocoTestCase(unittest.TestCase):
 
         # Ensure correct response
         response = client.get(thumbnail_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response._headers['content-type'][1], 'image/png')
+
+    def test_thumbnail_download_with_custom_size(self):
+        tmpl = "{{ obj.document.download_thumbnail|size:'121x121' }}"
+        response = client.get(self.render(tmpl))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response._headers['content-type'][1], 'image/png')
 

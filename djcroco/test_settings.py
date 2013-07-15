@@ -1,3 +1,5 @@
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
+
 DEBUG = True
 
 DATABASES = {
@@ -6,6 +8,11 @@ DATABASES = {
         'NAME': ':memory:',
     }
 }
+
+TEMPLATE_DEBUG = DEBUG
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'django.core.context_processors.request',
+)
 
 SECRET_KEY = 'lolz'
 
