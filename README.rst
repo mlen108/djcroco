@@ -100,7 +100,7 @@ Thumbnails
 
     {{ obj.document.thumbnail }}
 
-Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.org/wiki/Data_URI_scheme>`_ for more details).
+Returns thumbnail as inline image (see `Data URI scheme <https://en.wikipedia.org/wiki/Data_URI_scheme>`_ for more details). See below for how to download a thumbnail.
 
 URLs
 ^^^^
@@ -113,18 +113,19 @@ Returns url of the document so it can be viewed directly.
 
 Returns url of the document wrapped in `HttpResponse <https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpResponse>`_ object.
 
-Annotations
-^^^^^^^^^^^
+Both `url` and `content_url` can be extended with optional parameters (`see also <https://crocodoc.com/docs/api/#session-create>`_).
 
-    {% url 'croco_document_edit' uuid=obj.document.uuid user_id=<user_id> user_name=<user_name> %}
+    {{ obj.document.url|editable:true|user_id:"1"|user_name:"admin" }}
 
-Returns url of the document to allow user to create annotations.
-`See the docs <https://crocodoc.com/docs/walkthrough/comments/>`_ for more details.
+`editable` param allows users to create annotations and comments while viewing the document. **Default: false**
+`user_id` and `user_name` will be shown in the viewer to attribute annotations and comments to their author. **Required if editable is *true* **
 
-    {% url 'croco_document_annotations' uuid=obj.document.uuid user_id=<user_id> %}
+    {{ obj.document.url|user_filter:"1,2,3" }}
 
-Returns url of the document with annotations/comments made by user with given
-`user_id`.
+Limits which users' annotations and comments are shown. Possible values are: *all*, *none*, or a comma-separated list of user IDs. **Default: all**
+**Note**: `user_filter` is a renamed version of Crocodoc's `filter` in order to work in Django template system.
+
+Full list of supported `parameters <https://crocodoc.com/docs/api/#session-create>`_.
 
 Downloads
 ^^^^^^^^^
@@ -133,9 +134,22 @@ Downloads
 
 Returns the original document in PDF format.
 
+    {{ obj.document.download_document|annotated:true }}
+
+Returns the original document with annotations. **Default: false**
+
+    {{ obj.document.download_document|user_filter:"1,2,3" }}
+
+Returns the original document with annotations limited for given users.
+Possible values are: *all*, *none*, or a comma-separated list of user IDs. **Default: all**
+
     {{ obj.document.download_thumbnail }}
 
 Returns a thumbnail of the document's first page in PNG format.
+
+    {{ obj.document.download_thumbnail|size:"99x99" }}
+
+Same as `download_thumbnail` with custom dimensions of the thumbnail in the format *{width}x{height}*.Largest dimensions allowed are 300x300. **Default: 100x100**
 
     {{ obj.document.download_text }}
 

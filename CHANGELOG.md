@@ -1,6 +1,12 @@
 Changelog for djcroco
 =====================
 
+0.2.6
+=====
+
+* URLs for making annotations, downloading document/thumbnail allow now to pass
+optional parameters (by using template filters).
+
 0.2.5
 =====
 
