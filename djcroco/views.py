@@ -36,7 +36,15 @@ class CrocoDocumentDownload(View):
             raise Http404
 
         try:
-            file = crocodoc.download.document(uuid, True)
+            qs_params = request.GET
+            pdf = True
+            annotated = filter_by = None
+            if 'annotated' in qs_params and qs_params['annotated'].lower() == 'true':
+                annotated = True
+            if 'filter' in qs_params:
+                filter_by = True
+            file = crocodoc.download.document(uuid, pdf=pdf, annotated=annotated,
+                user_filter=filter_by)
         except crocodoc.CrocodocError as e:
             return HttpResponse(content=e.response_content,
                 status=e.status_code)
