@@ -33,7 +33,6 @@ class CrocoDocumentView(View):
             if 'sidebar' in qs_params:
                 params['sidebar'] = qs_params['sidebar']
 
-            print uuid, params
             session = crocodoc.session.create(uuid, **params)
         except crocodoc.CrocodocError as e:
             return HttpResponse(content=e.response_content,
