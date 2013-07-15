@@ -40,11 +40,11 @@ Or alternatively as env variable: ::
     export CROCO_API_TOKEN='<api_token>'
 
 When optional parameters for URLs are used (see below for more details) - then
-you need to add ``djcroco`` to ``INSTALLED_APPS`: ::
+you need to add ``djcroco`` to ``INSTALLED_APPS``: ::
 
     INSTALLED_APPS += ('djcroco',)
 
-And load template tags in the template you wish to use them in: ::
+And load its template tags in the template you wish to use them in: ::
 
     {% load croco_tags %}
 
@@ -73,10 +73,10 @@ You can pass ``thumbnail_size`` like so: ::
 
     document = CrocoField(thumbnail_size=(150, 150))
 
-Where tuple is represented as ``(width, height)``.
+Where tuple is represented as *(width, height)*.
 
 If you do not pass custom thumbnail size, the default will be used (100x100).
-The maximum dimensions for thumbnail is 300x300.
+The maximum dimensions for thumbnail is **300x300**.
 
 Render the awesomeness
 ----------------------
@@ -112,7 +112,7 @@ Returns type (extension) of the document.
 
     {{ obj.document.uuid }}
 
-Returns UUID of the document (each Crocodoc document has unique id).
+Returns UUID of the document (note: each Crocodoc document has unique id).
 
 Thumbnails
 ^^^^^^^^^^
@@ -144,7 +144,9 @@ Both ``url`` and ``content_url`` can be extended with `optional parameters <http
 
     {{ obj.document.url|editable:true|user_id:"1"|user_name:"admin" }}
 
-``editable`` param allows users to create annotations and comments while viewing the document. **Default: false**
+``editable`` param allows users to create annotations and comments while viewing the document.
+**Default: false**
+
 ``user_id`` and ``user_name`` will be shown in the viewer to attribute annotations and comments to their author. **Required if editable is true**
 
 ::
@@ -176,7 +178,7 @@ Returns the original document with annotations. **Default: false**
 
     {{ obj.document.download_document|user_filter:"1,2,3" }}
 
-Returns the original document with annotations limited for given users.
+Returns the original document with annotations limited to given users.
 Possible values are: *all*, *none*, or a comma-separated list of user IDs. **Default: all**
 
 ::
@@ -189,7 +191,7 @@ Returns a thumbnail of the document's first page in PNG format.
 
     {{ obj.document.download_thumbnail|size:"99x99" }}
 
-Same as `download_thumbnail` with custom dimensions of the thumbnail in the format *{width}x{height}*. Largest dimensions allowed are 300x300. **Default: 100x100**
+Same as ``download_thumbnail`` with custom dimensions of the thumbnail in the format *{width}x{height}*. Largest dimensions allowed are 300x300. **Default: 100x100**
 
 ::
 
