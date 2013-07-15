@@ -13,7 +13,28 @@ class CrocoDocumentView(View):
             raise Http404
 
         try:
-            session = crocodoc.session.create(uuid)
+            params = {}
+            qs_params = request.GET
+
+            bool_params = ("editable", "admin", "downloadable", "copyprotected", "demo")
+            for p in bool_params:
+                if p in qs_params:
+                    params[p] = True
+
+            if 'user_id' in qs_params and 'user_name' in qs_params:
+                params['user'] = {
+                    'id': qs_params['user_id'],
+                    'name': qs_params['user_name'],
+                }
+
+            if 'filter' in qs_params:
+                params['filter'] = qs_params['filter']
+
+            if 'sidebar' in qs_params:
+                params['sidebar'] = qs_params['sidebar']
+
+            print uuid, params
+            session = crocodoc.session.create(uuid, **params)
         except crocodoc.CrocodocError as e:
             return HttpResponse(content=e.response_content,
                 status=e.status_code)
@@ -53,58 +74,6 @@ class CrocoDocumentDownload(View):
         response['Content-Disposition'] = 'attachment; filename=%s.pdf' % uuid
         response.write(file)
         return response
-
-
-class CrocoDocumentEdit(View):
-    redirect = None
-
-    def get(self, request, *args, **kwargs):
-        uuid = kwargs.pop('uuid', None)
-        user_id = kwargs.pop('user_id', None)
-        user_name = kwargs.pop('user_name', None)
-        if not (uuid and user_id and user_name):
-            raise Http404
-
-        try:
-            kwargs = {
-                'editable': True,
-                'user': {
-                    'id': user_id,
-                    'name': user_name,
-                }
-            }
-            session = crocodoc.session.create(uuid, **kwargs)
-        except crocodoc.CrocodocError as e:
-            return HttpResponse(content=e.response_content,
-                status=e.status_code)
-
-        url = 'https://crocodoc.com/view/{0}'.format(session)
-
-        if self.redirect:
-            return HttpResponseRedirect(url)
-        return HttpResponse(content=url)
-
-
-class CrocoDocumentAnnotations(View):
-    redirect = None
-
-    def get(self, request, *args, **kwargs):
-        uuid = kwargs.pop('uuid', None)
-        user_id = kwargs.pop('user_id', None)
-        if not (uuid and user_id):
-            raise Http404
-
-        try:
-            session = crocodoc.session.create(uuid, filter=user_id)
-        except crocodoc.CrocodocError as e:
-            return HttpResponse(content=e.response_content,
-                status=e.status_code)
-
-        url = 'https://crocodoc.com/view/{0}'.format(session)
-
-        if self.redirect:
-            return HttpResponseRedirect(url)
-        return HttpResponse(content=url)
 
 
 class CrocoThumbnailDownload(View):
