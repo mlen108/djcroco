@@ -114,7 +114,10 @@ class CrocoThumbnailDownload(View):
             raise Http404
 
         try:
-            image = crocodoc.download.thumbnail(uuid)
+            width = height = None
+            if 'size' in request.GET:
+                width, height = request.GET['size'].split('x')
+            image = crocodoc.download.thumbnail(uuid, width=width, height=height)
         except crocodoc.CrocodocError as e:
             return HttpResponse(content=e.response_content,
                 status=e.status_code)
