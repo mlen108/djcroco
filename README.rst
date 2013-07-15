@@ -113,17 +113,18 @@ Returns url of the document so it can be viewed directly.
 
 Returns url of the document wrapped in `HttpResponse <https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpResponse>`_ object.
 
-Both `url` and `content_url` can be extended with optional parameters (`see also <https://crocodoc.com/docs/api/#session-create>`_).
+Both ``url`` and ``content_url`` can be extended with `optional parameters <https://crocodoc.com/docs/api/#session-create>`_.
 
     {{ obj.document.url|editable:true|user_id:"1"|user_name:"admin" }}
 
-`editable` param allows users to create annotations and comments while viewing the document. **Default: false**
-`user_id` and `user_name` will be shown in the viewer to attribute annotations and comments to their author. **Required if editable is *true* **
+``editable`` param allows users to create annotations and comments while viewing the document. **Default: false**
+``user_id`` and ``user_name`` will be shown in the viewer to attribute annotations and comments to their author. **Required if editable is true**
 
     {{ obj.document.url|user_filter:"1,2,3" }}
 
 Limits which users' annotations and comments are shown. Possible values are: *all*, *none*, or a comma-separated list of user IDs. **Default: all**
-**Note**: `user_filter` is a renamed version of Crocodoc's `filter` in order to work in Django template system.
+
+**Note**: ``user_filter`` is a renamed version of Crocodoc's ``filter`` in order to work in Django template system.
 
 Full list of supported `parameters <https://crocodoc.com/docs/api/#session-create>`_.
 
@@ -149,7 +150,7 @@ Returns a thumbnail of the document's first page in PNG format.
 
     {{ obj.document.download_thumbnail|size:"99x99" }}
 
-Same as `download_thumbnail` with custom dimensions of the thumbnail in the format *{width}x{height}*.Largest dimensions allowed are 300x300. **Default: 100x100**
+Same as `download_thumbnail` with custom dimensions of the thumbnail in the format *{width}x{height}*. Largest dimensions allowed are 300x300. **Default: 100x100**
 
     {{ obj.document.download_text }}
 
