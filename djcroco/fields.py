@@ -69,59 +69,26 @@ class CrocoFieldObject(object):
 
     @property
     def url(self):
-        return reverse('croco_document_view', kwargs={
-            'uuid': self.attrs['uuid']
-        })
+        return self._url_for('croco_document_url')
 
     @property
     def content_url(self):
-        return reverse('croco_document_content', kwargs={
-            'uuid': self.attrs['uuid']
-        })
-
-    def edit_url(self, user_id, user_name):
-        return reverse('croco_document_edit', kwargs={
-            'uuid': self.attrs['uuid'],
-            'user_id': user_id,
-            'user_name': user_name,
-        })
-
-    def edit_redirect_url(self, user_id, user_name):
-        return reverse('croco_document_edit_redirect', kwargs={
-            'uuid': self.attrs['uuid'],
-            'user_id': user_id,
-            'user_name': user_name,
-        })
-
-    def annotations_url(self, user_id):
-        return reverse('croco_document_annotations', kwargs={
-            'uuid': self.attrs['uuid'],
-            'user_id': user_id,
-        })
-
-    def annotations_redirect_url(self, user_id):
-        return reverse('croco_document_annotations_redirect', kwargs={
-            'uuid': self.attrs['uuid'],
-            'user_id': user_id,
-        })
+        return self._url_for('croco_document_content_url')
 
     @property
     def download_document(self):
-        return reverse('croco_document_download', kwargs={
-            'uuid': self.attrs['uuid']
-        })
+        return self._url_for('croco_document_download')
 
     @property
     def download_thumbnail(self):
-        return reverse('croco_thumbnail_download', kwargs={
-            'uuid': self.attrs['uuid']
-        })
+        return self._url_for('croco_thumbnail_download')
 
     @property
     def download_text(self):
-        return reverse('croco_text_download', kwargs={
-            'uuid': self.attrs['uuid']
-        })
+        return self._url_for('croco_text_download')
+
+    def _url_for(self, url):
+        return reverse(url, kwargs={'uuid': self.attrs['uuid']})
 
     def __unicode__(self):
         return "%s" % self.attrs['name']
