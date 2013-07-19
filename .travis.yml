@@ -11,6 +11,7 @@ env:
     secure: "ohFDQycYOrveVlvEVwHwws2+xPOvFT2TmyoQk/2fILNpl6tiuI/91XdVv8dQ\n5ZsLXc63LP4CFYbCKkC6jCFrlWePB0aITF35bpGJqXk68JptTcsKF9L5LyHX\ntMqLKAgIBeMs/upSXx6LrKrdwmjmPx0rZL71j+mCN1IeNW/0Fpo="
 install:
 - pip install -q Django==$DJANGO_VERSION --use-mirrors
+- pip install -q Pillow --use-mirrors
 - pip install . --use-mirrors
 - export DEBUG=True
 script: make test
