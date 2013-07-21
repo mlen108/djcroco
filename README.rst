@@ -78,6 +78,25 @@ Where tuple is represented as *(width, height)*.
 If you do not pass custom thumbnail size, the default will be used (100x100).
 The maximum dimensions for thumbnail is **300x300**.
 
+
+Thumbnail caching
+-----------------
+
+By default the thumbnail will be generated every time template gets rendered and
+this involves hitting Crocodoc API for each thumbnail. It could be time
+expensive if you have many items on a single page. To avoid above issue you
+can point to a field where the thumbnail will be saved and served from there
+the next time. ::
+
+    class Example(models.Model):
+        name = models.CharField(max_length=255)
+        document = CrocoField(thumbnail_field='my_thumbnail')
+        my_thumbnail = models.ImageField(upload_to='whatever/')
+
+
+Note that the ``thumbnail_field`` must be a type of `ImageField 
+<https://docs.djangoproject.com/en/dev/ref/models/fields/#imagefield>`_.
+
 Render the awesomeness
 ----------------------
 
@@ -136,7 +155,8 @@ Returns url of the document so it can be viewed directly.
 
     {{ obj.document.content_url }}
 
-Returns url of the document wrapped in `HttpResponse <https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpResponse>`_ object.
+Returns url of the document wrapped in `HttpResponse 
+<https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpResponse>`_ object.
 
 Both ``url`` and ``content_url`` can be extended with `optional parameters <https://crocodoc.com/docs/api/#session-create>`_.
 
