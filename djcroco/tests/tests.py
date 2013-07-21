@@ -6,7 +6,7 @@ from django.utils import unittest
 from django.template import Context, Template
 from django.test.client import Client
 
-from .models import Example
+from .models import Example, ThumbnailExample
 
 
 # simple 1-page pdf saying 'Hello, world!'
@@ -32,18 +32,23 @@ client = Client()
 def initial_setup():
     """ Inits all here as we do not want doing it in *every* test """
     # Create sample data
-    example = Example.objects.create(name='Test item',
+    example = Example.objects.create(
+        name='Test item',
+        document=SimpleUploadedFile(TEST_DOC_NAME, TEST_DOC_DATA))
+    thumbnail_example = ThumbnailExample.objects.create(
+        name='Test thumbnail item',
         document=SimpleUploadedFile(TEST_DOC_NAME, TEST_DOC_DATA))
 
     # Get data out of the model
     instance = Example.objects.get(id=example.id)
-    return instance
+    thumbnail_instance = ThumbnailExample.objects.get(id=thumbnail_example.id)
+    return instance, thumbnail_instance
 
 
 class CrocoTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.instance = initial_setup()
+        cls.instance, cls.thumbnail_instance = initial_setup()
 
     def setUp(self):
         # there is a race conditions somewhere so sleep between each test
@@ -146,6 +151,16 @@ class CrocoTestCase(unittest.TestCase):
         self.assertEqual(len(response.content), 1049)
         self.assertEqual(response._headers['content-type'][1],
             'application/pdf')
+
+    def test_document_thumbnail_custom_field(self):
+        t = self.thumbnail_instance
+        filename = t.my_thumbnail.field.upload_to + t.document.uuid
+        # thumbnail should not exist yet
+        self.assertFalse(t.my_thumbnail.storage.exists(filename))
+        # create thumbnail
+        t.document.thumbnail
+        # ensure it is saved in custom thumbnail field
+        self.assertTrue(t.my_thumbnail.storage.exists(filename))
 
     def test_thumbnail_download(self):
         # Ensure correct URL for `download_thumbnail`
