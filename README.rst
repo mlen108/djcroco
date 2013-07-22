@@ -51,7 +51,9 @@ And load its template tags in the template you wish to use them in: ::
 Usage
 -----
 
-Define the field in model you wish to extend: ::
+Define the field in model you wish to extend:
+
+.. code-block:: python
 
     from django.db import models
 
@@ -69,7 +71,9 @@ Define the field in model you wish to extend: ::
 Custom thumbnails size
 ----------------------
 
-You can pass ``thumbnail_size`` like so: ::
+You can pass ``thumbnail_size`` like so:
+
+.. code-block:: python
 
     document = CrocoField(thumbnail_size=(150, 150))
 
@@ -86,7 +90,9 @@ By default the thumbnail will be generated every time template gets rendered and
 this involves hitting Crocodoc API for each thumbnail. It could be time
 expensive if you have many items on a single page. To avoid above issue you
 can point to a field where the thumbnail will be saved and served from there
-the next time. ::
+the next time.
+
+.. code-block:: python
 
     class Example(models.Model):
         name = models.CharField(max_length=255)
