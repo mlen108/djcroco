@@ -6,7 +6,7 @@ from django.utils import unittest
 from django.template import Context, Template
 from django.test.client import Client
 
-from .models import Example, ThumbnailExample
+from .models import Example
 
 
 # simple 1-page pdf saying 'Hello, world!'
@@ -35,20 +35,16 @@ def initial_setup():
     example = Example.objects.create(
         name='Test item',
         document=SimpleUploadedFile(TEST_DOC_NAME, TEST_DOC_DATA))
-    thumbnail_example = ThumbnailExample.objects.create(
-        name='Test thumbnail item',
-        document=SimpleUploadedFile(TEST_DOC_NAME, TEST_DOC_DATA))
 
     # Get data out of the model
     instance = Example.objects.get(id=example.id)
-    thumbnail_instance = ThumbnailExample.objects.get(id=thumbnail_example.id)
-    return instance, thumbnail_instance
+    return instance
 
 
 class CrocoTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.instance, cls.thumbnail_instance = initial_setup()
+        cls.instance = initial_setup()
 
     def setUp(self):
         # there is a race conditions somewhere so sleep between each test
@@ -83,10 +79,6 @@ class CrocoTestCase(unittest.TestCase):
         # UUID is 32 long chars, but there is 36 including dash chars
         uuid = self.instance.document.uuid
         self.assertEqual(len(uuid), 36)
-
-    def test_document_thumbnail(self):
-        # Ensure in-line image was returned
-        self.assertContains(self.instance.document.thumbnail, 'data:image/png')
 
     def test_document_url(self):
         # Ensure correct URL was returned for `url`
@@ -153,14 +145,15 @@ class CrocoTestCase(unittest.TestCase):
             'application/pdf')
 
     def test_document_thumbnail_custom_field(self):
-        t = self.thumbnail_instance
-        filename = t.my_thumbnail.field.upload_to + t.document.uuid
+        # get filename with correct path
+        uuid = self.instance.document.uuid
+        filename = self.instance.my_thumbnail.field.upload_to + uuid
         # thumbnail should not exist yet
-        self.assertFalse(t.my_thumbnail.storage.exists(filename))
+        self.assertFalse(self.instance.my_thumbnail.storage.exists(filename))
         # create thumbnail
-        t.document.thumbnail
+        self.instance.document.thumbnail
         # ensure it is saved in custom thumbnail field
-        self.assertTrue(t.my_thumbnail.storage.exists(filename))
+        self.assertTrue(self.instance.my_thumbnail.storage.exists(filename))
 
     def test_thumbnail_download(self):
         # Ensure correct URL for `download_thumbnail`
