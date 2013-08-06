@@ -112,7 +112,7 @@ class CrocoField(models.Field):
 
     def to_python(self, value):
         if value == "":
-            return None
+            return value
 
         try:
             if isinstance(value, string_types):
@@ -123,7 +123,7 @@ class CrocoField(models.Field):
 
     def pre_save(self, model_instance, add):
         value = super(CrocoField, self).pre_save(model_instance, add)
-        if not isinstance(value, CrocoFieldObject):
+        if value and not isinstance(value, CrocoFieldObject):
             croco_uuid = self.storage._save(value)
             file_attrs = {
                 'name': value.name,
@@ -169,6 +169,19 @@ class CrocoField(models.Field):
         defaults = {'form_class': forms.FileField}
         defaults.update(kwargs)
         return super(CrocoField, self).formfield(**defaults)
+
+    # This is copied from models.FileField
+    def save_form_data(self, instance, data):
+        # Important: None means "no change", other false value means "clear"
+        # This subtle distinction (rather than a more explicit marker) is
+        # needed because we need to consume values that are also sane for a
+        # regular (non Model-) Form to find in its cleaned_data dictionary.
+        if data is not None:
+            # This value will be converted to unicode and stored in the
+            # database, so leaving False as-is is not acceptable.
+            if not data:
+                data = ''
+            setattr(instance, self.name, data)
 
     def _get_thumbnail(self, uuid):
         if self.thumbnail_field:
