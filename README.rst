@@ -20,6 +20,15 @@ etc) while having extra ones to play with Crocodoc API.
 ``djcroco`` is supported by `Incuna <http://incuna.com>`_ (an awesome company
 I work for!).
 
+Requirements
+------------
+
+- Python 2.6.x, 2.7.x
+- Django 1.3.x, 1.4.x, 1.5.x
+- `crocodoc <https://pypi.python.org/pypi/crocodoc>`_ 0.1.1
+
+Python 3.x will be supported soon!
+
 Installation
 ------------
 
@@ -226,12 +235,3 @@ Same as ``download_thumbnail`` with custom dimensions of the thumbnail in the fo
 Returns the full text from a document.
 Note: This method is available only if your Crocodoc account has text
 extraction enabled.
-
-Dependencies
-------------
-
-- Python 2.6.x, 2.7.x
-- Django 1.3.x, 1.4.x, 1.5.x
-- `crocodoc <https://pypi.python.org/pypi/crocodoc>`_ 0.1.1
-
-Python 3.x will be supported soon!
