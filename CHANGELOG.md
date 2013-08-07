@@ -1,6 +1,16 @@
 Changelog for djcroco
 =====================
 
+0.3.1
+=====
+
+* Allow the `CrocoField` to be null. Thanks @maxpeterson.
+
+0.3.0
+=====
+
+* Allow to save/cache thumbnails in custom field.
+
 0.2.6
 =====
 
