@@ -10,3 +10,11 @@ class Example(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class NullableExample(models.Model):
+    name = models.CharField(max_length=255)
+    document = CrocoField(thumbnail_field='my_thumbnail', null=True)
+    my_thumbnail = models.ImageField(upload_to='whatever/')
+
+    def __unicode__(self):
+        return self.name

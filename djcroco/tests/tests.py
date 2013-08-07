@@ -6,7 +6,7 @@ from django.utils import unittest
 from django.template import Context, Template
 from django.test.client import Client
 
-from .models import Example
+from .models import Example, NullableExample
 
 
 # simple 1-page pdf saying 'Hello, world!'
@@ -185,3 +185,13 @@ class CrocoTestCase(unittest.TestCase):
         response = client.get(text_url)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.content, '{"error": "text not available"}')
+
+    def test_document_empty(self):
+        # Ensure document can be empty
+        instance = Example.objects.create(name='Test empty')
+        self.assertEqual(instance.document, '')
+
+    def test_document_null(self):
+        # Ensure document can be null
+        instance = NullableExample.objects.create(name='Test empty')
+        self.assertEqual(instance.document, None)
