@@ -1,6 +1,11 @@
 Changelog for djcroco
 =====================
 
+0.3.2
+=====
+
+* Fix import which depends on Django version.
+
 0.3.1
 =====
 

@@ -14,7 +14,7 @@ from django.db.models import signals
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
 
-if get_version()[:3] == '1.3':
+if get_version()[:5] < '1.4.2':  # six was added in 1.4.2
     string_types = basestring
 else:
     from django.utils.six import string_types
