@@ -235,9 +235,3 @@ Same as ``download_thumbnail`` with custom dimensions of the thumbnail in the fo
 Returns the full text from a document.
 Note: This method is available only if your Crocodoc account has text
 extraction enabled.
-
-
-.. image:: https://d2weczhvl823v0.cloudfront.net/mattack108/djcroco/trend.png
-   :alt: Bitdeli badge
-   :target: https://bitdeli.com/free
-
