@@ -28,3 +28,6 @@ script: make test
 #      env: DJANGO_VERSION=1.4.5
 notifications:
   email: false
+branches:
+  only:
+    - master
