@@ -1,7 +1,7 @@
-This respository is dead!
+This repository is dead!
 =========================
 
-This respository is not maintained anymore, `Crocodoc was acquired by Box.net <http://blog.crocodoc.com/post/50019810661/crocodoc-joins-box-to-reimagine-documents-in-the>`_ and also this product was never `easy to work with <https://github.com/crocodoc/crocodoc-python/pull/8>`_.
+This repository is not maintained anymore, `Crocodoc was acquired by Box.net <http://blog.crocodoc.com/post/50019810661/crocodoc-joins-box-to-reimagine-documents-in-the>`_ and also this product was never `easy to work with <https://github.com/crocodoc/crocodoc-python/pull/8>`_.
 
 djcroco
 =======
