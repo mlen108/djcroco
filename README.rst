@@ -1,3 +1,8 @@
+This respository is dead!
+=========================
+
+This respository is not maintained anymore, `Crocodoc was acquired by Box.net <http://blog.crocodoc.com/post/50019810661/crocodoc-joins-box-to-reimagine-documents-in-the>`_ and also this product was never `easy to work with <https://github.com/crocodoc/crocodoc-python/pull/8>`_.
+
 djcroco
 =======
 
@@ -16,9 +21,6 @@ add support for the `Crocodoc API <https://crocodoc.com/>`_.
 It behaves like standard `FileField <https://docs.djangoproject.com/en/dev/ref/models/fields/#filefield>`_
 so you can still use most of its properties (e.g. ``name``, ``size``, ``url``
 etc) while having extra ones to play with Crocodoc API.
-
-``djcroco`` is supported by `Incuna <http://incuna.com>`_ (an awesome company
-I work for!).
 
 Requirements
 ------------
